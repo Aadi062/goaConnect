@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#0b1120"/>
+<meta name="description" content="GoaConnect Cybersecurity AI Force — Multi-agent security platform + Goa Tourism"/>
+<link rel="manifest" href="/static/manifest.json"/>
+<title>GoaConnect — Cybersecurity AI Force</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b1120;--surface:#111827;--s2:#1a2540;--card:#141e2e;
+  --border:#1e2d42;--b2:#243350;
+  --text:#e2e8f0;--t2:#cbd5e1;--muted:#64748b;--m2:#94a3b8;
+  --cyan:#06b6d4;--cyan2:#0891b2;--green:#10b981;--g2:#059669;
+  --red:#ef4444;--r2:#dc2626;--warn:#f59e0b;--w2:#d97706;
+  --info:#38bdf8;--purple:#a78bfa;--p2:#7c3aed;--pink:#f472b6;
+  --sw:220px;--th:56px;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.5}
+button{cursor:pointer;border:none;font-family:inherit;transition:all .15s}
+input,select,textarea{font-family:inherit;font-size:13px;background:var(--s2);border:1px solid var(--b2);border-radius:8px;padding:8px 12px;color:var(--text);width:100%;outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--cyan)}
+input::placeholder{color:var(--muted)}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+
+/* ── LOGIN ── */
+#login-page{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:100}
+.login-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -5%,#0e4a6a44,transparent),radial-gradient(ellipse 50% 40% at 90% 90%,#3b0764,transparent 60%),radial-gradient(ellipse 40% 30% at 10% 80%,#052e1644,transparent)}
+.login-card{position:relative;background:rgba(17,24,39,.95);border:1px solid var(--b2);border-radius:20px;padding:44px 40px 36px;width:420px;max-width:95vw;backdrop-filter:blur(20px);box-shadow:0 32px 80px #00000088}
+.llogo{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.llogo .hex{width:44px;height:44px;background:linear-gradient(135deg,var(--cyan),var(--purple));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 4px 16px #06b6d440}
+.llogo h1{font-size:24px;font-weight:800;background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em}
+.lsub{color:var(--m2);font-size:12px;margin-bottom:28px;padding-left:56px}
+.fg{margin-bottom:16px}
+.fg label{display:block;font-size:11px;font-weight:700;color:var(--m2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.btn-login{width:100%;padding:13px;background:linear-gradient(135deg,var(--cyan2),var(--p2));color:#fff;border-radius:10px;font-size:14px;font-weight:700;letter-spacing:.02em;margin-top:4px;border:none;box-shadow:0 4px 20px #06b6d430}
+.btn-login:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 8px 28px #06b6d450}
+.btn-login:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.ldiv{display:flex;align-items:center;gap:12px;margin:18px 0 14px;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.ldiv::before,.ldiv::after{content:'';flex:1;height:1px;background:var(--b2)}
+.qlogins{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ql{padding:10px 6px;border-radius:10px;font-size:12px;font-weight:600;border:1px solid var(--b2);background:var(--s2);color:var(--m2);display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .2s}
+.ql:hover{background:var(--surface);transform:translateY(-2px);box-shadow:0 4px 16px #00000040}
+.ql .qi{font-size:20px}
+.ql .qn{font-size:11px;font-weight:700}
+.ql .qr{font-size:10px;color:var(--muted)}
+.ql.qa:hover{border-color:var(--warn);box-shadow:0 4px 16px #f59e0b30}
+.ql.qb:hover{border-color:var(--cyan);box-shadow:0 4px 16px #06b6d430}
+.ql.qc:hover{border-color:var(--purple);box-shadow:0 4px 16px #a78bfa30}
+.lfoot{text-align:center;font-size:11px;color:var(--muted);margin-top:18px}
+.errmsg{background:#7f1d1d22;border:1px solid #991b1b;color:#fca5a5;padding:10px 14px;border-radius:8px;font-size:12px;margin-top:8px;display:none}
+
+/* ── APP SHELL ── */
+#app{display:none;height:100vh;flex-direction:row}
+#app.on{display:flex}
+
+/* ── SIDEBAR ── */
+#sidebar{width:var(--sw);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;overflow-x:hidden}
+.slogo{padding:16px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.slogo .h{width:34px;height:34px;background:linear-gradient(135deg,var(--cyan),var(--purple));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;flex-shrink:0}
+.slogo .b{line-height:1.25}
+.slogo .b b{font-size:14px;font-weight:700;color:var(--text)}
+.slogo .b span{font-size:10px;color:var(--muted);display:block}
+.ssec{padding:14px 16px 4px;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;margin:1px 6px;cursor:pointer;color:var(--m2);font-size:13px;font-weight:500;border:1px solid transparent;background:none;width:calc(100% - 12px);text-align:left;transition:all .15s}
+.ni:hover{background:var(--s2);color:var(--text)}
+.ni.on{background:linear-gradient(90deg,#06b6d412,#7c3aed12);color:var(--cyan);border-color:#06b6d422}
+.ni .ic{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.ni .nb{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center;display:none}
+.ni .nb.w{background:var(--warn)}
+.sfooter{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.upill{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--s2);border-radius:10px;border:1px solid var(--b2)}
+.uav{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;color:#fff}
+.av-a{background:linear-gradient(135deg,#d97706,#f59e0b)}
+.av-s{background:linear-gradient(135deg,#0891b2,#06b6d4)}
+.av-v{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
+.uinfo{flex:1;overflow:hidden}
+.uinfo .un{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.uinfo .ur{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.logoutbtn{background:none;border:none;color:var(--muted);font-size:18px;padding:4px;border-radius:4px;line-height:1}
+.logoutbtn:hover{color:var(--red)}
+
+/* ── CONTENT ── */
+#content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+#topbar{height:var(--th);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;flex-shrink:0}
+.tbtitle{font-size:15px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbtitle small{color:var(--m2);font-weight:400;font-size:12px;margin-left:8px}
+.tbright{display:flex;align-items:center;gap:8px}
+.ppill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.04em}
+.pp-h{background:#052e1640;border:1px solid #065f4660;color:#34d399}
+.pp-w{background:#451a0340;border:1px solid #92400e60;color:#fbbf24}
+.pp-c{background:#450a0a40;border:1px solid #991b1b60;color:#f87171}
+.dot{width:7px;height:7px;border-radius:50%}
+.dg{background:#34d399;box-shadow:0 0 6px #34d399}
+.dw{background:#fbbf24;box-shadow:0 0 6px #fbbf24}
+.dr{background:#f87171;box-shadow:0 0 6px #f87171;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.tbtn{background:var(--s2);border:1px solid var(--b2);color:var(--m2);border-radius:8px;padding:6px 10px;font-size:13px}
+.tbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+
+#main{flex:1;overflow-y:auto;background:var(--bg)}
+.page{display:none;padding:24px;animation:fadein .2s ease}
+.page.on{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── PAGE HEADER ── */
+.ph{margin-bottom:22px}
+.ph h2{font-size:20px;font-weight:700;margin-bottom:3px}
+.ph p{color:var(--m2);font-size:13px}
+.phtop{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.phactions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── STATS ── */
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+@media(max-width:1100px){.sgrid{grid-template-columns:1fr 1fr}}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden;transition:border-color .2s}
+.sc:hover{border-color:var(--b2)}
+.sc::after{content:'';position:absolute;inset:0;opacity:.05;pointer-events:none;background:var(--gl,transparent)}
+.sc.g{--gl:linear-gradient(135deg,var(--green),transparent)}
+.sc.c{--gl:linear-gradient(135deg,var(--cyan),transparent)}
+.sc.r{--gl:linear-gradient(135deg,var(--red),transparent)}
+.sc.w{--gl:linear-gradient(135deg,var(--warn),transparent)}
+.sc.p{--gl:linear-gradient(135deg,var(--purple),transparent)}
+.sic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px}
+.sic.g{background:#052e1640;border:1px solid #065f4640}
+.sic.c{background:#0c4a6e40;border:1px solid #0891b240}
+.sic.r{background:#450a0a40;border:1px solid #99181840}
+.sic.w{background:#451a0340;border:1px solid #92400e40}
+.sic.p{background:#3b076440;border:1px solid #7c3aed40}
+.sv{font-size:30px;font-weight:700;line-height:1;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.sl{font-size:11px;color:var(--m2);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.ss{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:1000px){.g2{grid-template-columns:1fr}.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.g3,.g4{grid-template-columns:1fr}}
+
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.ch h3{font-size:14px;font-weight:600}
+.ca{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ── BUTTONS ── */
+.btn{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;border:1px solid transparent;display:inline-flex;align-items:center;gap:6px;cursor:pointer;transition:all .15s;font-family:inherit}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.bp{background:linear-gradient(135deg,var(--cyan2),var(--p2));color:#fff;border:none}
+.bp:hover:not(:disabled){opacity:.9;transform:translateY(-1px)}
+.bs{background:var(--s2);color:var(--t2);border-color:var(--b2)}
+.bs:hover:not(:disabled){border-color:var(--cyan);color:var(--cyan)}
+.bg{background:#052e1660;color:#6ee7b7;border-color:#065f4680}
+.bg:hover:not(:disabled){background:#065f4680}
+.br{background:#450a0a60;color:#fca5a5;border-color:#99181880}
+.br:hover:not(:disabled){background:#991b1b60}
+.bw{background:#451a0360;color:#fcd34d;border-color:#92400e80}
+.bw:hover:not(:disabled){background:#92400e60}
+.bsm{padding:5px 12px;font-size:12px;border-radius:6px}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;font-family:monospace;text-transform:uppercase;letter-spacing:.03em}
+.sev-critical{background:#3b0764;color:#e879f9;border:1px solid #7c3aed}
+.sev-high{background:#450a0a;color:#fca5a5;border:1px solid #dc2626}
+.sev-medium{background:#451a03;color:#fcd34d;border:1px solid #d97706}
+.sev-low{background:#1c1003;color:#fed7aa;border:1px solid #92400e}
+.sev-info{background:#082f49;color:#7dd3fc;border:1px solid #0369a1}
+.st-open{color:#f87171;font-weight:600}
+.st-investigating{color:#fb923c;font-weight:600}
+.st-contained{color:#fbbf24}
+.st-resolved{color:#34d399}
+.st-false_positive{color:var(--muted)}
+.st-pending{color:#fbbf24;font-weight:600}
+.st-approved{color:#34d399}
+.st-rejected{color:#f87171}
+.st-healthy{color:#34d399;font-weight:600}
+.st-warning{color:#fbbf24;font-weight:600}
+.st-critical{color:#f87171;font-weight:600}
+
+/* ── TABLE ── */
+.tw{border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.tw table{width:100%;border-collapse:collapse}
+.tw thead{background:var(--surface)}
+.tw th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--m2);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap;border-bottom:1px solid var(--border)}
+.tw td{padding:11px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tw tbody tr:last-child td{border-bottom:none}
+.tw tbody tr:hover td{background:#ffffff05}
+.mono{font-family:monospace;font-size:11px;color:var(--m2)}
+.trunc{max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── CONFIDENCE ── */
+.cbar{display:flex;align-items:center;gap:6px;min-width:80px}
+.ctr{flex:1;height:4px;background:var(--s2);border-radius:2px}
+.cfi{height:4px;border-radius:2px}
+.cpct{font-size:11px;color:var(--muted);width:28px;text-align:right}
+
+/* ── DISCLAIMER ── */
+.disc{background:#451a0318;border:1px solid #92400e44;border-radius:10px;padding:10px 16px;font-size:12px;color:#fcd34d;margin-bottom:20px;display:flex;align-items:flex-start;gap:8px}
+
+/* ── FORM ── */
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ff{grid-column:1/-1}
+.fl{font-size:11px;font-weight:700;color:var(--m2);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.aform{background:var(--surface);border:1px solid var(--b2);border-radius:12px;padding:20px;margin-bottom:16px;display:none}
+.aform.open{display:block}
+.aform h3{font-size:14px;font-weight:600;margin-bottom:14px}
+
+/* ── APPROVAL CARD ── */
+.apcard{background:var(--card);border:1px solid #92400e44;border-radius:12px;padding:18px;margin-bottom:12px;transition:border-color .15s}
+.apcard:hover{border-color:var(--warn)}
+.apcardtitle{font-weight:600;margin-bottom:8px;font-size:14px}
+.apmeta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--m2);margin-bottom:12px}
+.apmeta .k{color:var(--muted)}
+.rbadge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase}
+.rh{background:#450a0a;color:#fca5a5}
+.rm{background:#451a03;color:#fcd34d}
+.rl{background:#052e16;color:#6ee7b7}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:20px;right:20px;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:9999;transform:translateY(60px);opacity:0;transition:all .25s;pointer-events:none;display:flex;align-items:center;gap:8px;max-width:360px}
+#toast.show{transform:none;opacity:1}
+#toast.ok{background:#052e16ee;border:1px solid #065f46;color:#6ee7b7}
+#toast.err{background:#450a0aee;border:1px solid #991b1b;color:#fca5a5}
+#toast.warn{background:#451a03ee;border:1px solid #92400e;color:#fcd34d}
+
+/* ── SPINNER ── */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--b2);border-top-color:var(--cyan);border-radius:50%;animation:rot .6s linear infinite;flex-shrink:0}
+@keyframes rot{to{transform:rotate(360deg)}}
+.loading{display:flex;align-items:center;gap:8px;color:var(--muted);padding:28px;justify-content:center;font-size:13px}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:40px 20px;color:var(--m2)}
+.empty .ei{font-size:38px;margin-bottom:10px;opacity:.7}
+.empty p{font-size:13px}
+
+/* ── PAGING ── */
+.paging{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+
+/* ── CHAT ── */
+.chatarea{overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:200px;max-height:320px;background:var(--bg);border:1px solid var(--border);border-radius:10px;margin-bottom:10px}
+.bubble{padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.65;max-width:88%}
+.bu{background:linear-gradient(135deg,#0c4a6e,#0e3a5a);align-self:flex-end;border:1px solid #0369a1}
+.ba{background:var(--surface);border:1px solid var(--b2);align-self:flex-start}
+.crow{display:flex;gap:8px}
+.crow input{flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:500;background:var(--s2);border:1px solid var(--b2);color:var(--m2);cursor:pointer}
+.chip:hover{border-color:var(--cyan);color:var(--cyan)}
+.rectag{display:inline-block;background:#052e16;border:1px solid #065f46;border-radius:20px;padding:2px 10px;font-size:12px;color:#6ee7b7;margin:2px}
+
+/* ── ITINERARY ── */
+.icard{background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:14px;margin-bottom:8px}
+.idaytitle{color:var(--cyan);font-weight:600;font-size:13px;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.iplaces{color:var(--t2);font-size:12px;margin-bottom:4px}
+.icost{color:var(--warn);font-size:12px}
+
+/* ── PLACE CARD ── */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;transition:all .18s;cursor:default}
+.pcard:hover{border-color:var(--cyan);transform:translateY(-2px);box-shadow:0 8px 28px #06b6d418}
+.pemoji{font-size:28px;margin-bottom:10px}
+.pname{font-size:14px;font-weight:700;margin-bottom:3px}
+.pko{font-size:11px;color:var(--m2);font-style:italic;margin-bottom:8px}
+.prow{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.cpill{background:var(--s2);border:1px solid var(--b2);border-radius:20px;padding:2px 10px;font-size:11px;color:var(--m2)}
+.vbadge{font-size:11px;color:var(--green);display:flex;align-items:center;gap:3px}
+.pdesc{font-size:12px;color:var(--m2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:8px}
+.tagwrap{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.tag{background:var(--s2);border-radius:4px;padding:2px 8px;font-size:11px;color:var(--muted)}
+.psource{font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:8px}
+
+/* ── AGENT OUTPUT ── */
+.aout{background:#060e1a;border:1px solid var(--b2);border-radius:10px;padding:14px;font-family:'Cascadia Code','Consolas',monospace;font-size:12px;line-height:1.7;white-space:pre-wrap;word-break:break-word;min-height:180px;max-height:380px;overflow-y:auto;color:#a5f3fc}
+
+/* ── ROLE CARD ── */
+.rcard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
+.rname{font-family:monospace;font-size:12px;color:var(--cyan);font-weight:700;margin-bottom:8px}
+.rtags{display:flex;flex-wrap:wrap;gap:4px}
+.rtag{background:var(--s2);border:1px solid var(--b2);border-radius:4px;padding:2px 7px;font-size:11px;color:var(--m2)}
+
+/* ── MINI CHART (SVG sparkline) ── */
+.sparkwrap{height:40px;overflow:hidden;margin-top:8px}
+
+/* ── NOTIFICATION DOT ── */
+.notif{display:inline-block;width:8px;height:8px;background:var(--red);border-radius:50%;margin-left:4px;vertical-align:middle;animation:blink 1.5s infinite}
+
+/* ── SEARCH BAR ── */
+.searchbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.searchbar input{max-width:220px}
+.searchbar select{max-width:160px}
+
+/* ── STATUS BAR ── */
+.sbar{display:flex;align-items:center;gap:16px;padding:8px 0;margin-bottom:16px;font-size:12px;color:var(--m2);border-bottom:1px solid var(--border)}
+.sbar span{display:flex;align-items:center;gap:5px}
+
+/* ── SECTION HEADER ── */
+.sech{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.sech h3{font-size:15px;font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ LOGIN ══════════════════════════ -->
+<div id="login-page">
+  <div class="login-bg"></div>
+  <div class="login-card">
+    <div class="llogo"><div class="hex">G</div><h1>GoaConnect</h1></div>
+    <p class="lsub">Cybersecurity AI Force · Goa Tourism Platform</p>
+    <div class="fg"><label>Username</label><input id="l-user" type="text" placeholder="Enter username" autocomplete="username"/></div>
+    <div class="fg"><label>Password</label><input id="l-pass" type="password" placeholder="Enter password" autocomplete="current-password"/></div>
+    <div id="l-err" class="errmsg"></div>
+    <button class="btn-login" id="l-btn" onclick="doLogin()">Sign In →</button>
+    <div class="ldiv">Quick Access</div>
+    <div class="qlogins">
+      <button class="ql qa" onclick="quickLogin('admin','Admin@GoaConnect1')"><span class="qi">👑</span><span class="qn">Admin</span><span class="qr">Full access</span></button>
+      <button class="ql qb" onclick="quickLogin('analyst','Analyst@GoaConnect1')"><span class="qi">🔍</span><span class="qn">Analyst</span><span class="qr">Security</span></button>
+      <button class="ql qc" onclick="quickLogin('guest','Guest@GoaConnect1')"><span class="qi">👤</span><span class="qn">Guest</span><span class="qr">Read-only</span></button>
+    </div>
+    <p class="lfoot">🔒 All access is logged · Unauthorized access is prohibited</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════ APP ══════════════════════════ -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="slogo">
+      <div class="h">G</div>
+      <div class="b"><b>GoaConnect</b><span>AI Force v0.1</span></div>
+    </div>
+    <div class="ssec">Security</div>
+    <button class="ni on" id="nav-dashboard" onclick="showPage('dashboard')"><span class="ic">🛡</span>Command Centre</button>
+    <button class="ni" id="nav-alerts" onclick="showPage('alerts')"><span class="ic">🚨</span>Alerts<span class="nb" id="nb-alerts">0</span></button>
+    <button class="ni" id="nav-approvals" onclick="showPage('approvals')"><span class="ic">✅</span>Approvals<span class="nb w" id="nb-approvals">0</span></button>
+    <button class="ni" id="nav-audit" onclick="showPage('audit')"><span class="ic">📋</span>Audit Log</button>
+    <div class="ssec">Intelligence</div>
+    <button class="ni" id="nav-agents" onclick="showPage('agents')"><span class="ic">🤖</span>AI Agents</button>
+    <div class="ssec">Tourism</div>
+    <button class="ni" id="nav-tourism" onclick="showPage('tourism')"><span class="ic">🌴</span>Goa Explorer</button>
+    <div class="sfooter">
+      <div class="upill">
+        <div class="uav av-a" id="u-av">A</div>
+        <div class="uinfo"><div class="un" id="u-name">—</div><div class="ur" id="u-role">—</div></div>
+        <button class="logoutbtn" onclick="doLogout()" title="Sign out">⏏</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content">
+    <div id="topbar">
+      <div class="tbtitle" id="tbtitle">Security Command Centre<small id="tbsub"></small></div>
+      <div class="tbright">
+        <div class="ppill pp-h" id="ppill"><div class="dot dg" id="pdot"></div><span id="plbl">Healthy</span></div>
+        <button class="tbtn" onclick="refreshCurrent()" title="Refresh page">↻</button>
+        <button class="tbtn" onclick="showPage('agents')" title="AI Agents">🤖</button>
+      </div>
+    </div>
+
+    <div id="main">
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="page-dashboard" class="page on">
+  <div class="ph">
+    <div class="phtop">
+      <div><h2>🛡 Security Command Centre</h2><p>Real-time threat monitoring · AI-powered detection · Incident response</p></div>
+      <div class="phactions">
+        <button class="btn bs bsm" onclick="loadDashboard()">↻ Refresh</button>
+        <button class="btn bp bsm" onclick="showPage('alerts')">View Alerts →</button>
+      </div>
+    </div>
+  </div>
+  <div class="disc">⚠️ AI-generated assessments are hypotheses until independently verified. Unverified alerts do not constitute confirmed incidents.</div>
+
+  <!-- Stat Cards -->
+  <div class="sgrid">
+    <div class="sc g">
+      <div class="sic g">🛡</div>
+      <div class="sv" id="ps-posture">—</div>
+      <div class="sl">System Posture</div>
+      <div class="ss" id="ps-posture-sub">Loading…</div>
+    </div>
+    <div class="sc c">
+      <div class="sic c">🔔</div>
+      <div class="sv" id="ps-open">—</div>
+      <div class="sl">Open Alerts</div>
+      <div class="ss">All severities</div>
+    </div>
+    <div class="sc r">
+      <div class="sic r">⚡</div>
+      <div class="sv" id="ps-crit" style="color:var(--red)">—</div>
+      <div class="sl">Critical Open</div>
+      <div class="ss">Immediate action needed</div>
+    </div>
+    <div class="sc w">
+      <div class="sic w">⏳</div>
+      <div class="sv" id="ps-appr" style="color:var(--warn)">—</div>
+      <div class="sl">Pending Approvals</div>
+      <div class="ss">Awaiting human review</div>
+    </div>
+  </div>
+
+  <!-- Recent tables -->
+  <div class="g2">
+    <div class="card">
+      <div class="ch"><h3>🚨 Recent Alerts</h3><div class="ca"><button class="btn bs bsm" onclick="showPage('alerts')">All alerts →</button></div></div>
+      <div class="tw"><table><thead><tr><th>Severity</th><th>Title</th><th>Status</th><th>Time</th></tr></thead>
+      <tbody id="dash-ab"><tr><td colspan="4"><div class="loading"><span class="spin"></span>Loading…</div></td></tr></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>📋 Recent Audit Events</h3><div class="ca"><button class="btn bs bsm" onclick="showPage('audit')">Full log →</button></div></div>
+      <div class="tw"><table><thead><tr><th>Event</th><th>Action</th><th>Result</th><th>Time</th></tr></thead>
+      <tbody id="dash-audb"><tr><td colspan="4"><div class="loading"><span class="spin"></span>Loading…</div></td></tr></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- Quick agent actions -->
+  <div style="margin-top:20px">
+    <div class="ch" style="margin-bottom:14px"><h3>⚡ Quick Agent Actions</h3></div>
+    <div class="g4">
+      <button class="card" style="text-align:center;cursor:pointer;border-color:var(--b2)" onclick="runQuickTask('auth_anomaly')" onmouseover="this.style.borderColor='var(--cyan)'" onmouseout="this.style.borderColor='var(--b2)'">
+        <div style="font-size:28px;margin-bottom:8px">🔐</div>
+        <div style="font-weight:600;font-size:13px">Auth Anomaly</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Detect brute force</div>
+      </button>
+      <button class="card" style="text-align:center;cursor:pointer;border-color:var(--b2)" onclick="runQuickTask('alert_triage')" onmouseover="this.style.borderColor='var(--warn)'" onmouseout="this.style.borderColor='var(--b2)'">
+        <div style="font-size:28px;margin-bottom:8px">🔀</div>
+        <div style="font-weight:600;font-size:13px">Alert Triage</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Deduplicate alerts</div>
+      </button>
+      <button class="card" style="text-align:center;cursor:pointer;border-color:var(--b2)" onclick="runQuickTask('risk_score')" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--b2)'">
+        <div style="font-size:28px;margin-bottom:8px">📊</div>
+        <div style="font-weight:600;font-size:13px">Risk Score</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Prioritize findings</div>
+      </button>
+      <button class="card" style="text-align:center;cursor:pointer;border-color:var(--b2)" onclick="showPage('tourism')" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--b2)'">
+        <div style="font-size:28px;margin-bottom:8px">🌴</div>
+        <div style="font-weight:600;font-size:13px">Goa Explorer</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Plan your trip</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick task result -->
+  <div id="quick-result" style="display:none;margin-top:16px">
+    <div class="card">
+      <div class="ch"><h3 id="qr-title">Agent Result</h3><button class="btn bs bsm" onclick="document.getElementById('quick-result').style.display='none'">✕</button></div>
+      <pre class="aout" id="qr-out" style="min-height:80px;max-height:200px"></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ALERTS ══════════ -->
+<div id="page-alerts" class="page">
+  <div class="ph">
+    <div class="phtop">
+      <div><h2>🚨 Security Alerts</h2><p>Create, filter, investigate and resolve security incidents</p></div>
+      <div class="phactions">
+        <button class="btn bs bsm" onclick="loadAlerts()">↻ Refresh</button>
+        <button class="btn bp bsm" onclick="toggleAF()">＋ New Alert</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Alert Form -->
+  <div class="aform" id="alert-form">
+    <h3>Create Security Alert</h3>
+    <div class="fr">
+      <div><label class="fl">Title</label><input id="ca-title" placeholder="Short alert title"/></div>
+      <div><label class="fl">Severity</label><select id="ca-sev"><option>high</option><option>critical</option><option>medium</option><option>low</option><option>info</option></select></div>
+      <div><label class="fl">Alert Type</label><input id="ca-type" placeholder="e.g. brute_force_suspected"/></div>
+      <div><label class="fl">Source Agent</label><input id="ca-agent" placeholder="e.g. authentication_guardian"/></div>
+      <div class="ff"><label class="fl">Description</label><textarea id="ca-desc" rows="2" placeholder="Describe what was detected…"></textarea></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn bp bsm" onclick="submitAlert()">Create Alert</button>
+      <button class="btn bs bsm" onclick="toggleAF()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="searchbar" style="margin-bottom:14px">
+    <select id="sev-filter" onchange="loadAlerts()" style="width:140px"><option value="">All Severities</option><option>critical</option><option>high</option><option>medium</option><option>low</option><option>info</option></select>
+    <select id="status-filter" onchange="loadAlerts()" style="width:150px"><option value="">All Statuses</option><option>open</option><option>investigating</option><option>contained</option><option>resolved</option><option>false_positive</option></select>
+    <span id="alerts-count" style="font-size:12px;color:var(--muted);margin-left:4px"></span>
+  </div>
+
+  <div class="tw">
+    <table><thead><tr><th>Severity</th><th>Title / Agent</th><th>Status</th><th>Confidence</th><th>Resource</th><th>Created</th><th>Action</th></tr></thead>
+    <tbody id="alerts-body"><tr><td colspan="7"><div class="loading"><span class="spin"></span>Loading…</div></td></tr></tbody></table>
+  </div>
+  <div class="paging" id="alerts-paging"></div>
+</div>
+
+<!-- ══════════ APPROVALS ══════════ -->
+<div id="page-approvals" class="page">
+  <div class="ph">
+    <div class="phtop">
+      <div><h2>✅ Human Approval Queue</h2><p>High-impact agent actions awaiting human authorization</p></div>
+      <div class="phactions"><button class="btn bs bsm" onclick="loadApprovals()">↻ Refresh</button></div>
+    </div>
+  </div>
+  <div class="disc">🔐 High-impact actions require explicit human approval. No agent may approve its own request. All decisions are permanently recorded in the audit log.</div>
+  <div id="approvals-list"><div class="loading"><span class="spin"></span>Loading…</div></div>
+</div>
+
+<!-- ══════════ AUDIT LOG ══════════ -->
+<div id="page-audit" class="page">
+  <div class="ph">
+    <div class="phtop">
+      <div><h2>📋 Audit Log</h2><p>Append-only record of all system events, actions and decisions</p></div>
+      <div class="phactions">
+        <select id="audit-filter" onchange="loadAudit()" style="width:160px"><option value="">All events</option><option value="auth">Auth events</option><option value="security">Security events</option><option value="agent">Agent events</option></select>
+        <button class="btn bs bsm" onclick="loadAudit()">↻ Refresh</button>
+      </div>
+    </div>
+  </div>
+  <div id="audit-count" style="font-size:12px;color:var(--muted);margin-bottom:12px"></div>
+  <div class="tw">
+    <table><thead><tr><th>Time</th><th>Event Type</th><th>Action</th><th>Outcome</th><th>User</th><th>Resource</th><th>Agent</th></tr></thead>
+    <tbody id="audit-body"><tr><td colspan="7"><div class="loading"><span class="spin"></span>Loading…</div></td></tr></tbody></table>
+  </div>
+  <div class="paging" id="audit-paging"></div>
+</div>
+
+<!-- ══════════ AGENTS ══════════ -->
+<div id="page-agents" class="page">
+  <div class="ph">
+    <div class="phtop">
+      <div><h2>🤖 AI Agent Console</h2><p>Submit tasks to the security &amp; tourism agent fleet · Inspect permissions &amp; results</p></div>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-bottom:20px">
+    <!-- Task input -->
+    <div class="card">
+      <div class="ch"><h3>⚡ Submit Task</h3></div>
+      <div style="margin-bottom:12px">
+        <label class="fl">Task Type</label>
+        <select id="task-type" onchange="updatePayload()">
+          <optgroup label="── Security ──">
+            <option value="auth_anomaly">Auth Anomaly Detection</option>
+            <option value="alert_triage">Alert Triage &amp; Deduplication</option>
+            <option value="containment">Containment Advisor</option>
+            <option value="risk_score">Risk Prioritization</option>
+          </optgroup>
+          <optgroup label="── Tourism ──">
+            <option value="travel_query">Travel Query</option>
+            <option value="itinerary">Itinerary Planner</option>
+            <option value="heritage">Heritage Guide</option>
+          </optgroup>
+        </select>
+      </div>
+      <div style="margin-bottom:12px">
+        <label class="fl">Payload (JSON)</label>
+        <textarea id="task-payload" rows="8" style="font-family:monospace;font-size:12px;resize:vertical"></textarea>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn bp" onclick="runTask()" id="run-btn">▶ Run Task</button>
+        <button class="btn bs bsm" onclick="updatePayload()">↺ Reset</button>
+        <span id="task-status" style="font-size:11px;color:var(--muted)">Idle</span>
+      </div>
+    </div>
+    <!-- Result -->
+    <div class="card">
+      <div class="ch">
+        <h3>📊 Result</h3>
+        <div class="ca">
+          <span id="agent-badge" style="font-size:11px;color:var(--muted);font-family:monospace"></span>
+          <button class="btn bs bsm" onclick="document.getElementById('agent-out').textContent='// Result cleared'">Clear</button>
+        </div>
+      </div>
+      <pre class="aout" id="agent-out">// Select a task type and click Run Task…</pre>
+    </div>
+  </div>
+
+  <!-- Policy checker -->
+  <div class="card" style="margin-bottom:20px">
+    <div class="ch"><h3>🔑 Policy Checker</h3><span style="font-size:12px;color:var(--muted)">Test if an agent action is permitted</span></div>
+    <div class="fr" style="align-items:end">
+      <div><label class="fl">Agent Role</label><input id="pc-role" placeholder="e.g. travel_assistant"/></div>
+      <div><label class="fl">Tool Name</label><input id="pc-tool" placeholder="e.g. write_security_alert"/></div>
+      <div><label class="fl">Resource Type</label><input id="pc-resource" placeholder="e.g. security_alert"/></div>
+      <div style="display:flex;align-items:flex-end"><button class="btn bp" onclick="checkPolicy()" style="width:100%">Check Policy</button></div>
+    </div>
+    <div id="pc-result" style="margin-top:12px;font-size:13px;display:none"></div>
+  </div>
+
+  <!-- Permission matrix -->
+  <div class="card">
+    <div class="ch"><h3>🗝 Agent Permission Matrix</h3><span style="font-size:12px;color:var(--muted)">All roles and their permitted tools</span></div>
+    <div id="roles-grid"><div class="loading"><span class="spin"></span>Loading…</div></div>
+  </div>
+</div>
+
+<!-- ══════════ TOURISM ══════════ -->
+<div id="page-tourism" class="page">
+  <div class="ph">
+    <div class="phtop">
+      <div><h2>🌴 Goa Explorer</h2><p>AI travel assistant · Heritage guide · Itinerary planner · Discover all of Goa</p></div>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-bottom:24px">
+    <!-- AI Chat -->
+    <div class="card" style="display:flex;flex-direction:column">
+      <div class="ch"><h3>💬 AI Travel Assistant</h3></div>
+      <div class="chatarea" id="chat-area">
+        <div class="bubble ba">🙏 <strong>Namaskaar!</strong> I'm your GoaConnect AI. Ask me about beaches, heritage sites, food, festivals, or let me plan your perfect Goa trip!</div>
+      </div>
+      <div class="crow">
+        <input id="chat-in" placeholder="Ask about Goa… beaches, heritage, food, festivals" onkeydown="if(event.key==='Enter')sendChat()"/>
+        <button class="btn bp bsm" onclick="sendChat()">Send</button>
+      </div>
+      <div class="chips">
+        <button class="chip" onclick="qChat('best beaches for a family trip')">🏖 Family beaches</button>
+        <button class="chip" onclick="qChat('UNESCO heritage sites in Goa')">🏛 Heritage</button>
+        <button class="chip" onclick="qChat('authentic Goan food to try')">🍛 Food</button>
+        <button class="chip" onclick="qChat('3 day budget trip under 10000 rupees')">💰 Budget trip</button>
+        <button class="chip" onclick="qChat('best time to visit Goa')">📅 Best time</button>
+        <button class="chip" onclick="qChat('nightlife and parties in Goa')">🎉 Nightlife</button>
+      </div>
+    </div>
+    <!-- Itinerary planner -->
+    <div class="card">
+      <div class="ch"><h3>🗺 Itinerary Planner</h3></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div><label class="fl">Days</label><input id="itin-days" type="number" value="3" min="1" max="14"/></div>
+        <div><label class="fl">Budget (₹)</label><input id="itin-budget" type="number" value="12000" min="1000"/></div>
+        <div><label class="fl">Group Size</label><input id="itin-group" type="number" value="2" min="1" max="50"/></div>
+        <div><label class="fl">Focus</label>
+          <select id="itin-focus">
+            <option value="">Balanced</option>
+            <option value="beaches">Beaches</option>
+            <option value="heritage">Heritage</option>
+            <option value="nature">Nature</option>
+            <option value="food">Food &amp; Culture</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn bp" style="width:100%;margin-bottom:14px" onclick="planItin()">🗺 Generate Itinerary</button>
+      <div id="itin-result"></div>
+    </div>
+  </div>
+
+  <!-- Heritage quick-lookup -->
+  <div class="card" style="margin-bottom:20px">
+    <div class="ch"><h3>🏛 Heritage Quick Lookup</h3></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <input id="heritage-input" placeholder="Enter heritage site name…" style="flex:1;min-width:200px" onkeydown="if(event.key==='Enter')lookupHeritage()"/>
+      <button class="btn bp bsm" onclick="lookupHeritage()">Look up</button>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="chip" onclick="setHeritage('Basilica of Bom Jesus')">Basilica of Bom Jesus</button>
+      <button class="chip" onclick="setHeritage('Chapora Fort')">Chapora Fort</button>
+      <button class="chip" onclick="setHeritage('Fontainhas')">Fontainhas</button>
+      <button class="chip" onclick="setHeritage('Se Cathedral')">Se Cathedral</button>
+    </div>
+    <div id="heritage-result"></div>
+  </div>
+
+  <!-- Places explorer -->
+  <div class="sech">
+    <h3>🗺 Explore All Places</h3>
+    <div class="searchbar">
+      <input id="place-search" placeholder="🔍 Search places, tags…" style="width:200px" oninput="filterPlaces()"/>
+      <select id="place-cat" onchange="filterPlaces()" style="width:140px">
+        <option value="">All Categories</option>
+        <option>beach</option><option>heritage</option><option>nature</option><option>market</option>
+      </select>
+      <span id="place-count" style="font-size:12px;color:var(--muted)"></span>
+    </div>
+  </div>
+  <div id="places-grid" class="pgrid" style="margin-top:14px"><div class="loading"><span class="spin"></span>Loading places…</div></div>
+</div>
+
+    </div><!-- /main -->
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+// ── State ────────────────────────────────────────────────────
+let TOKEN = localStorage.getItem('gc_token')||'';
+let ME = JSON.parse(localStorage.getItem('gc_me')||'null');
+let ALL_PLACES = [];
+let alertsPage = 1, auditPage = 1;
+let curPage = 'dashboard';
+
+// ── API ──────────────────────────────────────────────────────
+async function api(method, path, body, pub) {
+  const h = {'Content-Type':'application/json'};
+  if (!pub && TOKEN) h['Authorization']='Bearer '+TOKEN;
+  try {
+    const r = await fetch(path, {method, headers:h, body:body?JSON.stringify(body):undefined});
+    if (r.status===401 && !pub) { doLogout(); return null; }
+    const d = await r.json().catch(()=>null);
+    return {status:r.status, data:d};
+  } catch { return {status:0, data:null}; }
+}
+
+// ── Toast ────────────────────────────────────────────────────
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  const ic = type==='ok'?'✓':type==='err'?'✗':'⚠';
+  t.innerHTML = `<span>${ic}</span>${msg}`;
+  t.className = 'show '+type;
+  clearTimeout(t._tid);
+  t._tid = setTimeout(()=>{ t.className=''; }, 3200);
+}
+
+// ── Format helpers ───────────────────────────────────────────
+function fmt(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleString('en-IN',{hour12:false,day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+}
+function sevBadge(s) { return `<span class="badge sev-${s||'info'}">${s||'?'}</span>`; }
+function stSpan(s) {
+  const l=(s||'—').replace(/_/g,' ');
+  return `<span class="st-${(s||'').replace(/ /g,'_')}">${l}</span>`;
+}
+function cbar(v) {
+  if (v==null) return '<span style="color:var(--muted);font-size:11px">—</span>';
+  const p=Math.round(v*100), col=p>=80?'#34d399':p>=50?'#fbbf24':'#f87171';
+  return `<div class="cbar"><div class="ctr"><div class="cfi" style="width:${p}%;background:${col}"></div></div><span class="cpct">${p}%</span></div>`;
+}
+function avClass(r) { return r==='admin'?'av-a':r==='security_analyst'?'av-s':'av-v'; }
+
+// ── Auth ─────────────────────────────────────────────────────
+async function _login(username, password) {
+  const btn=document.getElementById('l-btn');
+  const err=document.getElementById('l-err');
+  err.style.display='none';
+  btn.disabled=true; btn.textContent='Signing in…';
+  const r=await api('POST','/api/v1/auth/login',{username,password},true);
+  if (!r||r.status!==200) {
+    err.textContent=r?.data?.detail||'Login failed — check credentials';
+    err.style.display='block'; btn.disabled=false; btn.textContent='Sign In →'; return;
+  }
+  TOKEN=r.data.access_token; localStorage.setItem('gc_token',TOKEN);
+  const me=await api('GET','/api/v1/auth/me');
+  if (me?.data) { ME=me.data; localStorage.setItem('gc_me',JSON.stringify(ME)); }
+  bootApp();
+}
+function doLogin() {
+  const u=document.getElementById('l-user').value.trim();
+  const p=document.getElementById('l-pass').value;
+  if (!u||!p) { const e=document.getElementById('l-err'); e.textContent='Enter username and password'; e.style.display='block'; return; }
+  _login(u,p);
+}
+function quickLogin(u,p) { document.getElementById('l-user').value=u; document.getElementById('l-pass').value=p; _login(u,p); }
+document.getElementById('l-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+
+function doLogout() {
+  TOKEN=''; ME=null;
+  localStorage.removeItem('gc_token'); localStorage.removeItem('gc_me');
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('login-page').style.display='flex';
+}
+
+function bootApp() {
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('app').classList.add('on');
+  document.getElementById('l-err').style.display='none';
+  document.getElementById('l-btn').disabled=false;
+  document.getElementById('l-btn').textContent='Sign In →';
+  if (ME) {
+    document.getElementById('u-name').textContent=ME.username;
+    document.getElementById('u-role').textContent=ME.role.replace(/_/g,' ');
+    const av=document.getElementById('u-av');
+    av.className='uav '+avClass(ME.role);
+    av.textContent=ME.username[0].toUpperCase();
+  }
+  showPage('dashboard');
+  loadPlaces(); loadRoles(); updatePayload();
+}
+
+// Auto-restore
+if (TOKEN) {
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('app').classList.add('on');
+  if (ME) {
+    document.getElementById('u-name').textContent=ME.username;
+    document.getElementById('u-role').textContent=ME.role.replace(/_/g,' ');
+    const av=document.getElementById('u-av');
+    av.className='uav '+avClass(ME.role);
+    av.textContent=ME.username[0].toUpperCase();
+  }
+  showPage('dashboard'); loadPlaces(); loadRoles(); updatePayload();
+}
+
+// ── Navigation ────────────────────────────────────────────────
+const PAGE_META = {
+  dashboard:['Security Command Centre','Real-time threat monitoring'],
+  alerts:['Security Alerts','Manage and investigate incidents'],
+  approvals:['Approval Queue','High-impact actions awaiting authorization'],
+  audit:['Audit Log','Complete append-only event history'],
+  agents:['AI Agent Console','Submit tasks · Check policies · View permissions'],
+  tourism:['Goa Explorer','AI travel assistant · Heritage · Itinerary planner'],
+};
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(b=>b.classList.remove('on'));
+  const pg=document.getElementById('page-'+name);
+  const ni=document.getElementById('nav-'+name);
+  if (pg) pg.classList.add('on');
+  if (ni) ni.classList.add('on');
+  curPage=name;
+  const [title,sub]=PAGE_META[name]||[name,''];
+  const tt=document.getElementById('tbtitle');
+  tt.textContent=title;
+  const sm=document.createElement('small');
+  sm.id='tbsub'; sm.textContent=' · '+sub;
+  tt.appendChild(sm);
+  if (name==='dashboard') loadDashboard();
+  if (name==='alerts') loadAlerts();
+  if (name==='approvals') loadApprovals();
+  if (name==='audit') loadAudit();
+}
+function refreshCurrent() { showPage(curPage); }
+
+// ── Dashboard ─────────────────────────────────────────────────
+async function loadDashboard() {
+  const [pos,alr,aud]=await Promise.all([
+    api('GET','/api/v1/security/posture'),
+    api('GET','/api/v1/security/alerts?page=1&page_size=5'),
+    api('GET','/api/v1/security/audit?page=1&page_size=6'),
+  ]);
+  if (pos?.data) {
+    const p=pos.data;
+    const c=p.posture==='healthy'?'var(--green)':p.posture==='warning'?'var(--warn)':'var(--red)';
+    document.getElementById('ps-posture').innerHTML=`<span style="color:${c};font-size:22px">${p.posture.toUpperCase()}</span>`;
+    document.getElementById('ps-posture-sub').textContent=`Services: ${p.checked_services||1}`;
+    document.getElementById('ps-open').textContent=p.open_alerts??'0';
+    document.getElementById('ps-crit').textContent=p.critical_open_alerts??'0';
+    document.getElementById('ps-appr').textContent=p.pending_approvals??'0';
+    // topbar pill
+    const pp=document.getElementById('ppill');
+    const pd=document.getElementById('pdot');
+    pp.className='ppill pp-'+p.posture;
+    pd.className='dot '+(p.posture==='healthy'?'dg':p.posture==='warning'?'dw':'dr');
+    document.getElementById('plbl').textContent=p.posture.charAt(0).toUpperCase()+p.posture.slice(1);
+    // sidebar badges
+    const nba=document.getElementById('nb-alerts');
+    const nbap=document.getElementById('nb-approvals');
+    if (p.open_alerts>0) { nba.textContent=p.open_alerts; nba.style.display=''; } else nba.style.display='none';
+    if (p.pending_approvals>0) { nbap.textContent=p.pending_approvals; nbap.style.display=''; } else nbap.style.display='none';
+  }
+  // Recent alerts table
+  const ab=document.getElementById('dash-ab');
+  if (alr?.data?.items?.length) {
+    ab.innerHTML=alr.data.items.map(a=>`<tr>
+      <td>${sevBadge(a.severity)}</td>
+      <td class="trunc" title="${esc(a.title)}">${esc(a.title)}</td>
+      <td>${stSpan(a.status)}</td>
+      <td class="mono">${fmt(a.created_at)}</td>
+    </tr>`).join('');
+  } else ab.innerHTML='<tr><td colspan="4"><div class="empty"><div class="ei">✅</div><p>No alerts — system is clean</p></div></td></tr>';
+  // Audit table
+  const aub=document.getElementById('dash-audb');
+  if (aud?.data?.length) {
+    aub.innerHTML=aud.data.slice(0,6).map(e=>`<tr>
+      <td class="mono" style="color:var(--info)">${esc(e.event_type)}</td>
+      <td style="font-size:12px">${esc(e.action)}</td>
+      <td>${e.outcome==='success'?'<span style="color:#34d399">✓</span>':e.outcome==='failure'?'<span style="color:#f87171">✗</span>':'<span style="color:#fbbf24">⊘</span>'} ${esc(e.outcome)}</td>
+      <td class="mono">${fmt(e.created_at)}</td>
+    </tr>`).join('');
+  } else aub.innerHTML='<tr><td colspan="4"><div class="empty"><p>No audit events yet</p></div></td></tr>';
+}
+
+async function runQuickTask(type) {
+  const el=document.getElementById('quick-result');
+  const out=document.getElementById('qr-out');
+  const title=document.getElementById('qr-title');
+  el.style.display='block';
+  out.textContent='// Running '+type+' …';
+  title.textContent='⚡ '+type.replace(/_/g,' ');
+  const defaults={
+    auth_anomaly:{login_events:[{outcome:"failure",ip:"1.2.3.4"},{outcome:"failure",ip:"1.2.3.5"},{outcome:"failure",ip:"1.2.3.4"},{outcome:"failure",ip:"1.2.3.4"},{outcome:"failure",ip:"1.2.3.6"},{outcome:"failure",ip:"1.2.3.4"}],user_id:"suspect_user"},
+    alert_triage:{alerts:[{alert_type:"brute_force",affected_resource:"user1",severity:"high"},{alert_type:"brute_force",affected_resource:"user1",severity:"high"},{alert_type:"api_abuse",affected_resource:"/login",severity:"medium"}]},
+    risk_score:{findings:[{severity:"high",exploitability_score:0.8,business_impact_score:0.9},{severity:"medium",exploitability_score:0.5,business_impact_score:0.6}]},
+  };
+  const r=await api('POST','/api/v1/agents/tasks',{task_type:type,payload:defaults[type]||{},deadline_seconds:30});
+  if (!r?.data) { out.textContent='// Error — no response'; return; }
+  const d=r.data;
+  out.textContent=`Agent:      ${d.agent_role}\nStatus:     ${d.status}\nConfidence: ${Math.round((d.confidence||0)*100)}%\n\n${JSON.stringify(d.result,null,2)}`;
+  toast('Task complete: '+d.agent_role);
+}
+
+// ── Alerts ────────────────────────────────────────────────────
+async function loadAlerts() {
+  const sev=document.getElementById('sev-filter').value;
+  const st=document.getElementById('status-filter').value;
+  let url=`/api/v1/security/alerts?page=${alertsPage}&page_size=20`;
+  if (sev) url+='&severity='+sev;
+  if (st) url+='&status='+st;
+  const r=await api('GET',url);
+  const tb=document.getElementById('alerts-body');
+  if (!r?.data?.items) { tb.innerHTML='<tr><td colspan="7"><div class="empty"><div class="ei">⚠️</div><p>Failed to load alerts</p></div></td></tr>'; return; }
+  document.getElementById('alerts-count').textContent=`${r.data.total} total`;
+  if (!r.data.items.length) { tb.innerHTML='<tr><td colspan="7"><div class="empty"><div class="ei">✅</div><p>No alerts match your filters</p></div></td></tr>'; return; }
+  tb.innerHTML=r.data.items.map(a=>`<tr>
+    <td>${sevBadge(a.severity)}</td>
+    <td>
+      <div style="font-weight:600;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(a.title)}">${esc(a.title)}</div>
+      <div class="mono" style="margin-top:2px">${esc(a.source_agent)}</div>
+    </td>
+    <td>${stSpan(a.status)}</td>
+    <td>${cbar(a.confidence)}</td>
+    <td class="trunc mono" title="${esc(a.affected_resource||'')}">${esc(a.affected_resource||'—')}</td>
+    <td class="mono">${fmt(a.created_at)}</td>
+    <td style="white-space:nowrap">
+      ${a.status==='open'?`<button class="btn bw bsm" onclick="updAlert('${a.id}','investigating')">Investigate</button>`:''}
+      ${a.status==='investigating'?`<button class="btn bg bsm" onclick="updAlert('${a.id}','resolved')">Resolve</button>`:''}
+      ${a.status==='resolved'||a.status==='false_positive'?`<span class="mono" style="color:var(--muted)">${stSpan(a.status)}</span>`:''}
+    </td>
+  </tr>`).join('');
+  const pg=document.getElementById('alerts-paging');
+  pg.innerHTML=`<span>Total: <b>${r.data.total}</b></span><span>Page <b>${r.data.page}</b></span>
+    ${alertsPage>1?`<button class="btn bs bsm" onclick="alertsPage--;loadAlerts()">← Prev</button>`:''}
+    ${r.data.total>alertsPage*20?`<button class="btn bs bsm" onclick="alertsPage++;loadAlerts()">Next →</button>`:''}`;
+}
+
+function toggleAF() {
+  const f=document.getElementById('alert-form');
+  f.classList.toggle('open');
+}
+
+async function submitAlert() {
+  const title=document.getElementById('ca-title').value.trim();
+  const desc=document.getElementById('ca-desc').value.trim();
+  const sev=document.getElementById('ca-sev').value;
+  const type=document.getElementById('ca-type').value.trim();
+  const agent=document.getElementById('ca-agent').value.trim();
+  if (!title||!desc||!type||!agent) { toast('Fill all required fields','err'); return; }
+  const r=await api('POST','/api/v1/security/alerts',{title,description:desc,severity:sev,alert_type:type,source_agent:agent,confidence:0.7});
+  if (r?.status===201) { toast('✓ Alert created'); document.getElementById('alert-form').classList.remove('open'); loadAlerts(); loadDashboard(); }
+  else toast(r?.data?.detail||'Failed to create alert','err');
+}
+
+async function updAlert(id, status) {
+  const r=await api('PATCH',`/api/v1/security/alerts/${id}`,{status});
+  if (r?.status===200) { toast(`Alert → ${status}`); loadAlerts(); loadDashboard(); }
+  else toast('Update failed','err');
+}
+
+// ── Approvals ─────────────────────────────────────────────────
+async function loadApprovals() {
+  const r=await api('GET','/api/v1/security/approvals?status=pending');
+  const el=document.getElementById('approvals-list');
+  if (!r?.data?.length) {
+    el.innerHTML='<div class="card" style="text-align:center;padding:44px"><div style="font-size:44px;margin-bottom:12px">✅</div><p style="color:var(--green);font-size:16px;font-weight:700">No pending approvals</p><p style="color:var(--muted);font-size:13px;margin-top:6px">All high-impact actions have been reviewed</p></div>';
+    return;
+  }
+  el.innerHTML=r.data.map(a=>`
+    <div class="apcard">
+      <div class="apcardtitle">${esc(a.action_description)}</div>
+      <div class="apmeta">
+        <span><span class="k">Agent: </span><span style="font-family:monospace">${esc(a.requesting_agent)}</span></span>
+        <span><span class="k">Type: </span><span style="font-family:monospace">${esc(a.action_type)}</span></span>
+        <span><span class="k">Risk: </span><span class="rbadge r${(a.risk_level||'m')[0]}">${esc(a.risk_level||'—')}</span></span>
+        <span><span class="k">Expires: </span>${fmt(a.expires_at)}</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn bg" onclick="decide('${a.id}',true)">✓ Approve</button>
+        <button class="btn br" onclick="decide('${a.id}',false)">✕ Reject</button>
+      </div>
+    </div>`).join('');
+}
+
+async function decide(id, approved) {
+  const note=(approved?'Approved':'Rejected')+' by '+(ME?.username||'user');
+  const r=await api('POST',`/api/v1/security/approvals/${id}/decide`,{approved,note});
+  if (r?.status===200) { toast(approved?'✓ Approved':'✕ Rejected',approved?'ok':'err'); loadApprovals(); loadDashboard(); }
+  else toast(r?.data?.detail||'Error','err');
+}
+
+// ── Audit ─────────────────────────────────────────────────────
+async function loadAudit() {
+  const filt=document.getElementById('audit-filter')?.value||'';
+  let url=`/api/v1/security/audit?page=${auditPage}&page_size=50`;
+  const r=await api('GET',url);
+  const tb=document.getElementById('audit-body');
+  if (!r?.data?.length) { tb.innerHTML='<tr><td colspan="7"><div class="empty"><p>No audit events yet</p></div></td></tr>'; return; }
+  let events=r.data;
+  if (filt) events=events.filter(e=>e.event_type&&e.event_type.includes(filt));
+  document.getElementById('audit-count').textContent=`${events.length} events shown`;
+  tb.innerHTML=events.map(e=>`<tr>
+    <td class="mono">${fmt(e.created_at)}</td>
+    <td class="mono" style="color:var(--info)">${esc(e.event_type)}</td>
+    <td style="font-size:12px">${esc(e.action)}</td>
+    <td>${e.outcome==='success'?'<span style="color:#34d399;font-weight:600">success</span>':e.outcome==='failure'?'<span style="color:#f87171;font-weight:600">failure</span>':'<span style="color:#fbbf24">'+esc(e.outcome)+'</span>'}</td>
+    <td class="mono">${esc(e.username||e.user_id?.slice(0,8)||'—')}</td>
+    <td class="trunc mono">${esc(e.resource||'—')}</td>
+    <td class="mono">${esc(e.agent_id||'—')}</td>
+  </tr>`).join('');
+}
+
+// ── Agents ────────────────────────────────────────────────────
+const TASK_DEF = {
+  auth_anomaly:{login_events:[{outcome:"failure",ip:"1.2.3.4"},{outcome:"failure",ip:"1.2.3.5"},{outcome:"failure",ip:"1.2.3.4"},{outcome:"failure",ip:"1.2.3.6"},{outcome:"failure",ip:"1.2.3.4"},{outcome:"failure",ip:"1.2.3.7"}],user_id:"suspect_user"},
+  alert_triage:{alerts:[{alert_type:"brute_force",affected_resource:"user1",severity:"high"},{alert_type:"brute_force",affected_resource:"user1",severity:"high"},{alert_type:"api_abuse",affected_resource:"/login",severity:"medium"}]},
+  containment:{alert_type:"brute_force_suspected"},
+  risk_score:{findings:[{severity:"high",exploitability_score:0.8,business_impact_score:0.9},{severity:"medium",exploitability_score:0.5,business_impact_score:0.6}]},
+  travel_query:{query:"best beaches for a family trip",days:3,budget_inr:12000},
+  itinerary:{days:3,budget_inr:15000,group_size:2},
+  heritage:{site:"basilica of bom jesus"},
+};
+function updatePayload() {
+  const t=document.getElementById('task-type').value;
+  document.getElementById('task-payload').value=JSON.stringify(TASK_DEF[t]||{},null,2);
+}
+async function runTask() {
+  const btn=document.getElementById('run-btn');
+  const type=document.getElementById('task-type').value;
+  const st=document.getElementById('task-status');
+  let payload;
+  try { payload=JSON.parse(document.getElementById('task-payload').value); }
+  catch { toast('Invalid JSON payload','err'); return; }
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Running…';
+  st.textContent='Running…'; st.style.color='var(--warn)';
+  document.getElementById('agent-out').textContent='// Running…';
+  const r=await api('POST','/api/v1/agents/tasks',{task_type:type,payload,deadline_seconds:30});
+  btn.disabled=false; btn.innerHTML='▶ Run Task';
+  if (!r?.data) { document.getElementById('agent-out').textContent='// Error: no response'; st.textContent='Error'; st.style.color='var(--red)'; return; }
+  const d=r.data;
+  st.textContent=d.status; st.style.color=d.status==='success'?'var(--green)':'var(--red)';
+  document.getElementById('agent-badge').textContent=d.agent_role;
+  document.getElementById('agent-out').textContent=[
+    `Agent:       ${d.agent_role}`,
+    `Status:      ${d.status}`,
+    `Confidence:  ${Math.round((d.confidence||0)*100)}%`,
+    `Approval?    ${d.requires_human_approval}`,
+    ``,
+    `── Result ─────────────────────────────`,
+    JSON.stringify(d.result,null,2),
+    ``,
+    `── Evidence ───────────────────────────`,
+    JSON.stringify(d.evidence,null,2),
+  ].join('\n');
+  if (d.status==='success') toast('✓ Task complete: '+d.agent_role);
+}
+
+async function checkPolicy() {
+  const role=document.getElementById('pc-role').value.trim();
+  const tool=document.getElementById('pc-tool').value.trim();
+  const resource=document.getElementById('pc-resource').value.trim();
+  if (!role||!tool) { toast('Enter role and tool','warn'); return; }
+  const r=await api('POST','/api/v1/agents/policy/check',{agent_role:role,tool_name:tool,resource_type:resource,action:'write'});
+  const el=document.getElementById('pc-result');
+  el.style.display='block';
+  if (!r?.data) { el.innerHTML='<span style="color:var(--red)">Error checking policy</span>'; return; }
+  const d=r.data;
+  const color=d.allowed?'var(--green)':d.reason==='requires_approval'?'var(--warn)':'var(--red)';
+  el.innerHTML=`<span style="color:${color};font-weight:700">${d.allowed?'✓ PERMITTED':'✗ DENIED'}</span>
+    ${d.reason?`<span style="color:var(--muted);margin-left:12px;font-size:12px">${esc(d.reason)}</span>`:''}
+    ${d.requires_approval?'<span style="color:var(--warn);margin-left:12px;font-size:12px">⚠ Requires approval</span>':''}`;
+}
+
+async function loadRoles() {
+  const r=await api('GET','/api/v1/agents/roles');
+  const el=document.getElementById('roles-grid');
+  if (!r?.data) { el.innerHTML='<div style="color:var(--muted);padding:16px">Could not load roles</div>'; return; }
+  const roles=Object.entries(r.data);
+  el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px">${
+    roles.map(([role,tools])=>`<div class="rcard">
+      <div class="rname">${esc(role)}</div>
+      <div class="rtags">${(tools||[]).map(t=>`<span class="rtag">${esc(t)}</span>`).join('')}</div>
+    </div>`).join('')
+  }</div>`;
+}
+
+// ── Tourism ───────────────────────────────────────────────────
+async function loadPlaces() {
+  const r=await api('GET','/api/v1/tourism/places?page_size=50',null,true);
+  ALL_PLACES=r?.data||[];
+  filterPlaces();
+}
+
+const CEMOJI={beach:'🏖',heritage:'🏛',nature:'🌿',market:'🛍',default:'📍'};
+
+function filterPlaces() {
+  const q=(document.getElementById('place-search')?.value||'').toLowerCase();
+  const cat=document.getElementById('place-cat')?.value||'';
+  const filtered=ALL_PLACES.filter(p=>
+    (!q||(p.name||'').toLowerCase().includes(q)||(p.description||'').toLowerCase().includes(q)||((p.tags||[]).join(' ')).toLowerCase().includes(q))&&
+    (!cat||p.category===cat)
+  );
+  document.getElementById('place-count').textContent=`${filtered.length} places`;
+  renderPlaces(filtered);
+}
+
+function renderPlaces(places) {
+  const el=document.getElementById('places-grid');
+  if (!places.length) { el.innerHTML='<div class="empty"><div class="ei">🔍</div><p>No places match your search</p></div>'; return; }
+  el.innerHTML=places.map(p=>`<div class="pcard">
+    <div class="pemoji">${CEMOJI[p.category]||CEMOJI.default}</div>
+    <div class="pname">${esc(p.name)}</div>
+    ${p.name_konkani?`<div class="pko">${esc(p.name_konkani)}</div>`:''}
+    <div class="prow">
+      <span class="cpill">${esc(p.category)}</span>
+      ${p.district?`<span style="font-size:11px;color:var(--muted)">${esc(p.district)}</span>`:''}
+      ${p.is_verified?`<span class="vbadge">✓ verified</span>`:''}
+    </div>
+    ${p.description?`<div class="pdesc">${esc(p.description)}</div>`:''}
+    ${(p.tags||[]).length?`<div class="tagwrap">${p.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:''}
+    ${(p.source_citations||[]).length?`<div class="psource">📚 ${p.source_citations.map(s=>esc(s)).join(' · ')}</div>`:''}
+  </div>`).join('');
+}
+
+// ── Chat ──────────────────────────────────────────────────────
+async function sendChat() {
+  const inp=document.getElementById('chat-in');
+  const q=inp.value.trim(); if (!q) return;
+  inp.value='';
+  addBubble(esc(q),'u');
+  const thinking=addBubble('<span class="spin"></span> Thinking…','a');
+  const r=await api('POST','/api/v1/agents/tasks',{task_type:'travel_query',payload:{query:q,days:3,budget_inr:10000}});
+  thinking.remove();
+  if (r?.data?.result?.response) {
+    let html=esc(r.data.result.response);
+    const recs=r.data.result.recommendations||[];
+    if (recs.length) html+=`<div style="margin-top:10px">${recs.map(x=>`<span class="rectag">${esc(x)}</span>`).join('')}</div>`;
+    const cites=r.data.result.source_citations||[];
+    if (cites.length) html+=`<div style="font-size:11px;color:var(--muted);margin-top:8px">📚 ${cites.map(s=>esc(s)).join(' · ')}</div>`;
+    addBubble(html,'a');
+  } else addBubble('Sorry, I could not process that request. Please try again.','a');
+}
+function qChat(q) { document.getElementById('chat-in').value=q; sendChat(); }
+function addBubble(html,who) {
+  const area=document.getElementById('chat-area');
+  const d=document.createElement('div');
+  d.className='bubble b'+who; d.innerHTML=html;
+  area.appendChild(d); area.scrollTop=area.scrollHeight; return d;
+}
+
+// ── Itinerary ─────────────────────────────────────────────────
+async function planItin() {
+  const days=parseInt(document.getElementById('itin-days').value)||3;
+  const budget=parseInt(document.getElementById('itin-budget').value)||12000;
+  const group=parseInt(document.getElementById('itin-group').value)||2;
+  const el=document.getElementById('itin-result');
+  el.innerHTML='<div class="loading"><span class="spin"></span>Planning your itinerary…</div>';
+  const r=await api('POST','/api/v1/agents/tasks',{task_type:'itinerary',payload:{days,budget_inr:budget,group_size:group}});
+  const itin=r?.data?.result?.itinerary||[];
+  if (!itin.length) { el.innerHTML='<div class="empty"><p>Could not generate itinerary. Try again.</p></div>'; return; }
+  const ppb=r.data.result.daily_per_person_budget||Math.round(budget/days/group);
+  el.innerHTML=`<div style="font-size:12px;color:var(--m2);margin-bottom:10px">₹${budget.toLocaleString('en-IN')} total · ₹${ppb}/person/day · ${group} traveller${group>1?'s':''}</div>`+
+    itin.map(d=>`<div class="icard">
+      <div class="idaytitle">📅 Day ${d.day}: ${esc(d.theme)}</div>
+      <div class="iplaces">📍 ${(d.places||[]).map(p=>esc(p)).join(' → ')}</div>
+      <div class="icost">~₹${d.estimated_cost_inr} per person</div>
+    </div>`).join('');
+}
+
+// ── Heritage ──────────────────────────────────────────────────
+function setHeritage(name) { document.getElementById('heritage-input').value=name; lookupHeritage(); }
+async function lookupHeritage() {
+  const site=document.getElementById('heritage-input').value.trim();
+  if (!site) return;
+  const el=document.getElementById('heritage-result');
+  el.innerHTML='<div class="loading"><span class="spin"></span>Looking up heritage site…</div>';
+  const r=await api('POST','/api/v1/agents/tasks',{task_type:'heritage',payload:{site}});
+  if (!r?.data?.result) { el.innerHTML='<div class="empty"><p>No information found</p></div>'; return; }
+  const res=r.data.result;
+  el.innerHTML=`<div class="card" style="margin-top:0">
+    <div style="font-size:16px;font-weight:700;margin-bottom:8px">🏛 ${esc(res.site||site)}</div>
+    ${res.year_built?`<div style="font-size:12px;color:var(--m2);margin-bottom:6px">Built: ${esc(String(res.year_built))}</div>`:''}
+    ${res.description?`<div style="font-size:13px;line-height:1.65;color:var(--t2);margin-bottom:10px">${esc(res.description)}</div>`:''}
+    ${(res.key_facts||[]).length?`<div style="font-size:12px;color:var(--m2)">${res.key_facts.map(f=>`• ${esc(f)}`).join('<br>')}</div>`:''}
+    ${(res.source_citations||[]).length?`<div style="font-size:11px;color:var(--muted);margin-top:10px">📚 ${res.source_citations.map(s=>esc(s)).join(' · ')}</div>`:''}
+  </div>`;
+}
+
+// ── Escape helper ─────────────────────────────────────────────
+function esc(s) {
+  if (s==null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
