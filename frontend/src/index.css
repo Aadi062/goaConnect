@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cyber-bg: #0f172a;
+  --cyber-surface: #1e293b;
+  --cyber-border: #334155;
+}
+
+body {
+  @apply bg-slate-950 text-slate-100 font-sans;
+}
+
+.cyber-card {
+  @apply bg-slate-900 border border-slate-700 rounded-lg p-4;
+}
+
+.severity-critical { @apply text-purple-400 bg-purple-900/20 border-purple-700; }
+.severity-high     { @apply text-red-400 bg-red-900/20 border-red-700; }
+.severity-medium   { @apply text-orange-400 bg-orange-900/20 border-orange-700; }
+.severity-low      { @apply text-yellow-400 bg-yellow-900/20 border-yellow-700; }
+.severity-info     { @apply text-sky-400 bg-sky-900/20 border-sky-700; }
+
+.status-open         { @apply text-red-400; }
+.status-investigating{ @apply text-yellow-400; }
+.status-contained    { @apply text-orange-400; }
+.status-resolved     { @apply text-green-400; }
+.status-false_positive { @apply text-slate-400; }

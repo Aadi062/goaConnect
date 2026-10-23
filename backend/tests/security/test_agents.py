@@ -91,8 +91,9 @@ async def test_travel_assistant_returns_recommendations():
     task = AgentInput(task_type="travel_query", payload={"query": "beach", "days": 3, "budget_inr": 5000})
     result = await agent.run(task)
     assert result.status == "success"
-    assert len(result.result["recommendations"]) > 0
+    assert len(result.result["response"]) > 0
     assert len(result.result["source_citations"]) > 0
+    assert "agent_model" in result.result
 
 
 @pytest.mark.asyncio

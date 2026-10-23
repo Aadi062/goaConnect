@@ -52,9 +52,17 @@ r = check("GET /health",
     req("GET", "/health"), 200,
     lambda b: b.get("status") == "ok")
 
+r = check("GET /health (components reported)",
+    req("GET", "/health"), 200,
+    lambda b: "components" in b and "ollama" in b.get("components", {}))
+
 r = check("GET /ready",
     req("GET", "/ready"), 200,
     lambda b: b.get("database") == "ok")
+
+r = check("GET /ready (cache_backend reported)",
+    req("GET", "/ready"), 200,
+    lambda b: "cache_backend" in b)
 
 # ── Auth ──────────────────────────────────────────────────
 import time as _t
@@ -290,6 +298,29 @@ if p3:
 check("GET  /agents/roles  (permission matrix)",
     req("GET", "/api/v1/agents/roles", token=ANALYST), 200,
     lambda b: "authentication_guardian" in b and "travel_assistant" in b)
+
+# ── Semantic Search ───────────────────────────────────────
+ss = check("GET /tourism/places?semantic=true&q=waterfall",
+    req("GET", "/api/v1/tourism/places?q=waterfall&semantic=true", token=ANALYST), 200,
+    lambda b: isinstance(b, list))
+if ss:
+    print(f"         semantic search returned {len(ss)} places")
+
+ss2 = check("GET /tourism/places?semantic=true (heritage query)",
+    req("GET", "/api/v1/tourism/places?q=heritage+church+UNESCO&semantic=true", token=ANALYST), 200,
+    lambda b: any("Basilica" in p.get("name","") or "Cathedral" in p.get("name","") for p in b))
+
+# ── Travel Assistant (HTTP, with agent routing) ────────────
+ta = check("POST /tourism/assistant (agent-routed)",
+    req("POST", "/api/v1/tourism/assistant", {
+        "query": "best beaches in Goa",
+        "days": 3,
+        "budget_inr": 12000
+    }, token=ANALYST), 200,
+    lambda b: "response" in b and "agent_model" in b)
+if ta:
+    print(f"         agent_model={ta.get('agent_model')}  llm_available={ta.get('llm_available')}")
+    print(f"         confidence={ta.get('confidence')}")
 
 # ── Final posture (should show open alerts) ───────────────
 final = check("GET  /security/posture  (final state)",

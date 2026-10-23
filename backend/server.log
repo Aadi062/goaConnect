@@ -1,0 +1,150 @@
+INFO:     Started server process [12484]
+INFO:     Waiting for application startup.
+2026-10-23T09:35:52.902559Z [info     ] startup                        environment=development service='GoaConnect Cybersecurity AI Force'
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51169 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51175 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51176 - "GET /ready HTTP/1.1" 200 OK
+2026-10-23T09:35:59.976205Z [info     ] audit_event                    action=register agent_id=None event_type=auth.register outcome=success request_id=eb633e00-f889-4caf-82d7-1431073313c7 resource=None user_id=95bff38c-a97a-4808-a61c-001a9215c920
+INFO:     127.0.0.1:51177 - "POST /api/v1/auth/register HTTP/1.1" 201 Created
+INFO:     127.0.0.1:51178 - "POST /api/v1/auth/register HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:51179 - "POST /api/v1/auth/register HTTP/1.1" 422 Unprocessable Content
+2026-10-23T09:36:00.279478Z [info     ] audit_event                    action=login agent_id=None event_type=auth.login outcome=success request_id=32a1c1ff-98bd-4965-8d79-40c2f6f92e0e resource=None user_id=9ee8ee3d-a2e0-43b2-b82c-9a5da128df27
+INFO:     127.0.0.1:51180 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2026-10-23T09:36:00.553338Z [info     ] audit_event                    action=login agent_id=None event_type=auth.login outcome=success request_id=3b3217c2-4f4d-4336-a5d8-cbcddd2da323 resource=None user_id=51be10c2-8b5a-4dfd-92f8-a2d35f183974
+INFO:     127.0.0.1:51181 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51182 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51183 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+2026-10-23T09:36:00.833261Z [info     ] audit_event                    action=login agent_id=None event_type=auth.login outcome=failure request_id=f1b85169-5066-4812-820e-c3b4a741e6fa resource=None user_id=9ee8ee3d-a2e0-43b2-b82c-9a5da128df27
+INFO:     127.0.0.1:51184 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51185 - "GET /api/v1/security/posture HTTP/1.1" 200 OK
+2026-10-23T09:36:00.859582Z [info     ] audit_event                    action=create_alert agent_id=authentication_guardian event_type=security.alert.created outcome=success request_id=c8f44aa5-e194-444f-bf7e-362332f71ae1 resource=alert:520734b6-cb31-4b5e-a224-1087885f2bbb user_id=51be10c2-8b5a-4dfd-92f8-a2d35f183974
+2026-10-23T09:36:00.859770Z [warning  ] new_security_alert             alert_id=520734b6-cb31-4b5e-a224-1087885f2bbb request_id=c8f44aa5-e194-444f-bf7e-362332f71ae1 severity=high source=authentication_guardian title='Brute Force - 8 failures from 10.10.10.1'
+INFO:     127.0.0.1:51186 - "POST /api/v1/security/alerts HTTP/1.1" 201 Created
+INFO:     127.0.0.1:51187 - "GET /api/v1/security/alerts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51188 - "GET /api/v1/security/alerts/520734b6-cb31-4b5e-a224-1087885f2bbb HTTP/1.1" 200 OK
+2026-10-23T09:36:00.907244Z [info     ] audit_event                    action=update_alert agent_id=None event_type=security.alert.updated outcome=success request_id=1f3cfee8-10cf-4bc8-985d-93590d5de2af resource=alert:520734b6-cb31-4b5e-a224-1087885f2bbb user_id=51be10c2-8b5a-4dfd-92f8-a2d35f183974
+INFO:     127.0.0.1:51189 - "PATCH /api/v1/security/alerts/520734b6-cb31-4b5e-a224-1087885f2bbb HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51190 - "POST /api/v1/security/alerts HTTP/1.1" 401 Unauthorized
+2026-10-23T09:36:00.938806Z [info     ] audit_event                    action=request_approval agent_id=None event_type=security.approval.requested outcome=success request_id=cd356e1d-c804-4d29-bbf5-e6b4b2da35b6 resource=approval:fc0a5f0e-aa89-413f-8e66-ec0f649a2c97 user_id=51be10c2-8b5a-4dfd-92f8-a2d35f183974
+INFO:     127.0.0.1:51191 - "POST /api/v1/security/approvals HTTP/1.1" 201 Created
+INFO:     127.0.0.1:51192 - "GET /api/v1/security/approvals HTTP/1.1" 200 OK
+2026-10-23T09:36:00.969435Z [info     ] audit_event                    action=decide_approval agent_id=None event_type=security.approval.decided outcome=approved request_id=753f633c-7702-49e0-a74a-0a7f67e71c58 resource=approval:fc0a5f0e-aa89-413f-8e66-ec0f649a2c97 user_id=51be10c2-8b5a-4dfd-92f8-a2d35f183974
+INFO:     127.0.0.1:51193 - "POST /api/v1/security/approvals/fc0a5f0e-aa89-413f-8e66-ec0f649a2c97/decide HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51194 - "POST /api/v1/security/approvals/fc0a5f0e-aa89-413f-8e66-ec0f649a2c97/decide HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:51195 - "GET /api/v1/security/audit HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51196 - "GET /api/v1/tourism/places HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51197 - "GET /api/v1/tourism/places?q=beach HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51198 - "GET /api/v1/tourism/places?category=heritage HTTP/1.1" 200 OK
+2026-10-23T09:36:01.046169Z [info     ] manager_dispatch               priority=5 request_id=2472a93b-48d9-4727-961e-78a18f0061d4 task_id=c3f12f98-588d-4ad4-8213-c029e85add07 task_type=auth_anomaly
+2026-10-23T09:36:01.046366Z [info     ] agent_completed                agent=authentication_guardian:a667ca1e request_id=2472a93b-48d9-4727-961e-78a18f0061d4 status=success task_id=c3f12f98-588d-4ad4-8213-c029e85add07
+INFO:     127.0.0.1:51199 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+2026-10-23T09:36:01.060184Z [info     ] manager_dispatch               priority=5 request_id=fbfb7d02-b3cd-438e-a882-3f890939963e task_id=170fb7a0-06eb-4d58-bf01-b1befeb25c67 task_type=travel_query
+2026-10-23T09:36:05.077744Z [info     ] ollama_unavailable             fallback=rules_based request_id=fbfb7d02-b3cd-438e-a882-3f890939963e
+2026-10-23T09:36:05.079192Z [info     ] agent_completed                agent=travel_assistant:19442b39 request_id=fbfb7d02-b3cd-438e-a882-3f890939963e status=success task_id=170fb7a0-06eb-4d58-bf01-b1befeb25c67
+INFO:     127.0.0.1:51200 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+2026-10-23T09:36:05.098055Z [info     ] manager_dispatch               priority=5 request_id=f4b54294-87ce-4294-95ef-72eae893464d task_id=a0e0e7ab-5476-42f2-a3ce-76ffe435f8c5 task_type=itinerary
+2026-10-23T09:36:05.098526Z [info     ] agent_completed                agent=itinerary_planner:a899c515 request_id=f4b54294-87ce-4294-95ef-72eae893464d status=success task_id=a0e0e7ab-5476-42f2-a3ce-76ffe435f8c5
+INFO:     127.0.0.1:51203 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+2026-10-23T09:36:05.111453Z [info     ] manager_dispatch               priority=5 request_id=c426b55a-500d-4ef1-9602-4af06cd8d502 task_id=41480622-6add-41dc-870b-40792db3c8e9 task_type=heritage
+2026-10-23T09:36:05.111803Z [info     ] agent_completed                agent=heritage_guide:111bebd6 request_id=c426b55a-500d-4ef1-9602-4af06cd8d502 status=success task_id=41480622-6add-41dc-870b-40792db3c8e9
+INFO:     127.0.0.1:51204 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+2026-10-23T09:36:05.115979Z [info     ] manager_dispatch               priority=5 request_id=b3c52157-e878-4b27-811f-9396f85f0bcb task_id=d7bf570c-6a6b-4163-b87b-9b7ddf9a2a22 task_type=alert_triage
+2026-10-23T09:36:05.116321Z [info     ] agent_completed                agent=alert_triage:caa018f3 request_id=b3c52157-e878-4b27-811f-9396f85f0bcb status=success task_id=d7bf570c-6a6b-4163-b87b-9b7ddf9a2a22
+INFO:     127.0.0.1:51205 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+2026-10-23T09:36:05.120365Z [info     ] manager_dispatch               priority=5 request_id=587a82d8-febf-4b84-81f1-7dfde8c38587 task_id=3e4fa055-24f4-4154-b0b2-723116a6d9a7 task_type=containment
+2026-10-23T09:36:05.120689Z [info     ] agent_completed                agent=containment_advisor:8296a22d request_id=587a82d8-febf-4b84-81f1-7dfde8c38587 status=success task_id=3e4fa055-24f4-4154-b0b2-723116a6d9a7
+INFO:     127.0.0.1:51206 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51207 - "POST /api/v1/agents/policy/check HTTP/1.1" 200 OK
+2026-10-23T09:36:05.130059Z [warning  ] policy_violation               action=blocked agent_role=travel_assistant request_id=bb21e900-8e02-4bbf-a20d-5cd381075b18 requested_tool=write:alerts
+INFO:     127.0.0.1:51208 - "POST /api/v1/agents/policy/check HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51209 - "POST /api/v1/agents/policy/check HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51210 - "GET /api/v1/agents/roles HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51211 - "GET /api/v1/security/posture HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51215 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51223 - "POST /auth/login HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:51227 - "GET /openapi.json HTTP/1.1" 200 OK
+2026-10-23T09:37:09.501365Z [info     ] audit_event                    action=login agent_id=None event_type=auth.login outcome=success request_id=47b0b44e-ee6d-486a-aac2-b41e900e1e8a resource=None user_id=9ee8ee3d-a2e0-43b2-b82c-9a5da128df27
+INFO:     127.0.0.1:51232 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2026-10-23T09:37:11.536385Z [info     ] keyword_search                 query='waterfall nature' request_id=047f8e82-d48f-4ba2-97e9-73bff204b8d9 results=3
+INFO:     127.0.0.1:51234 - "GET /api/v1/tourism/places?q=waterfall+nature&semantic=true HTTP/1.1" 200 OK
+2026-10-23T09:37:13.591477Z [info     ] audit_event                    action=travel_assistant agent_id=None event_type=tourism.assistant.query outcome=success request_id=dd2f8c31-955f-4773-aba7-d89983262be1 resource=None user_id=9ee8ee3d-a2e0-43b2-b82c-9a5da128df27
+2026-10-23T09:37:13.592350Z [info     ] manager_dispatch               priority=5 request_id=dd2f8c31-955f-4773-aba7-d89983262be1 task_id=1261f6f5-ec83-45c8-bfd9-ff05ac50dcb5 task_type=travel_query
+2026-10-23T09:37:13.592774Z [info     ] agent_completed                agent=travel_assistant:41fc72c6 request_id=dd2f8c31-955f-4773-aba7-d89983262be1 status=success task_id=1261f6f5-ec83-45c8-bfd9-ff05ac50dcb5
+INFO:     127.0.0.1:51236 - "POST /api/v1/tourism/assistant HTTP/1.1" 200 OK
+2026-10-23T09:37:26.924918Z [info     ] audit_event                    action=login agent_id=None event_type=auth.login outcome=success request_id=cd769285-aa71-4b24-afd9-7ce174d5fa59 resource=None user_id=9ee8ee3d-a2e0-43b2-b82c-9a5da128df27
+INFO:     127.0.0.1:51244 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2026-10-23T09:37:28.968217Z [info     ] keyword_search                 query='waterfall nature' request_id=58bb8be3-26af-4b5d-825e-4c8f1687a134 results=3
+INFO:     127.0.0.1:51246 - "GET /api/v1/tourism/places?q=waterfall+nature&semantic=true HTTP/1.1" 200 OK
+2026-10-23T09:37:31.013841Z [info     ] audit_event                    action=travel_assistant agent_id=None event_type=tourism.assistant.query outcome=success request_id=bbcf01f1-d6e0-407b-a3f7-9bddb6645516 resource=None user_id=9ee8ee3d-a2e0-43b2-b82c-9a5da128df27
+2026-10-23T09:37:31.014427Z [info     ] manager_dispatch               priority=5 request_id=bbcf01f1-d6e0-407b-a3f7-9bddb6645516 task_id=263ace8c-3a5f-4c68-bd8b-576c1dc41b81 task_type=travel_query
+2026-10-23T09:37:31.014859Z [info     ] agent_completed                agent=travel_assistant:74f10842 request_id=bbcf01f1-d6e0-407b-a3f7-9bddb6645516 status=success task_id=263ace8c-3a5f-4c68-bd8b-576c1dc41b81
+INFO:     127.0.0.1:51248 - "POST /api/v1/tourism/assistant HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51256 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51257 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51258 - "GET /ready HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51259 - "GET /ready HTTP/1.1" 200 OK
+2026-10-23T09:38:01.539096Z [info     ] audit_event                    action=register agent_id=None event_type=auth.register outcome=success request_id=aa6e3374-d87c-4a28-a88e-d75a251a498a resource=None user_id=a7b627f2-326a-45c2-a11c-db7f50725e71
+INFO:     127.0.0.1:51260 - "POST /api/v1/auth/register HTTP/1.1" 201 Created
+INFO:     127.0.0.1:51261 - "POST /api/v1/auth/register HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:51262 - "POST /api/v1/auth/register HTTP/1.1" 422 Unprocessable Content
+2026-10-23T09:38:01.838471Z [info     ] audit_event                    action=login agent_id=None event_type=auth.login outcome=success request_id=e8e5a656-2049-4276-b2a4-1c23a5af5894 resource=None user_id=9ee8ee3d-a2e0-43b2-b82c-9a5da128df27
+INFO:     127.0.0.1:51263 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2026-10-23T09:38:02.096389Z [info     ] audit_event                    action=login agent_id=None event_type=auth.login outcome=success request_id=7114a386-4c2b-4f64-b58f-3a76b8a7fb15 resource=None user_id=51be10c2-8b5a-4dfd-92f8-a2d35f183974
+INFO:     127.0.0.1:51264 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51265 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51266 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+2026-10-23T09:38:02.417637Z [info     ] audit_event                    action=login agent_id=None event_type=auth.login outcome=failure request_id=c14c5340-a040-4626-923d-6946958b5396 resource=None user_id=9ee8ee3d-a2e0-43b2-b82c-9a5da128df27
+INFO:     127.0.0.1:51267 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51268 - "GET /api/v1/security/posture HTTP/1.1" 200 OK
+2026-10-23T09:38:02.427878Z [info     ] audit_event                    action=create_alert agent_id=authentication_guardian event_type=security.alert.created outcome=success request_id=bf62ff9c-b8a9-47e3-bee7-83a6b5cbd9d8 resource=alert:7fc6bcfe-343f-41f2-ad8d-6a06ea3f2263 user_id=51be10c2-8b5a-4dfd-92f8-a2d35f183974
+2026-10-23T09:38:02.428061Z [warning  ] new_security_alert             alert_id=7fc6bcfe-343f-41f2-ad8d-6a06ea3f2263 request_id=bf62ff9c-b8a9-47e3-bee7-83a6b5cbd9d8 severity=high source=authentication_guardian title='Brute Force - 8 failures from 10.10.10.1'
+INFO:     127.0.0.1:51269 - "POST /api/v1/security/alerts HTTP/1.1" 201 Created
+INFO:     127.0.0.1:51270 - "GET /api/v1/security/alerts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51271 - "GET /api/v1/security/alerts/7fc6bcfe-343f-41f2-ad8d-6a06ea3f2263 HTTP/1.1" 200 OK
+2026-10-23T09:38:02.448812Z [info     ] audit_event                    action=update_alert agent_id=None event_type=security.alert.updated outcome=success request_id=0528649a-2aa4-4639-89a7-148fccfcca71 resource=alert:7fc6bcfe-343f-41f2-ad8d-6a06ea3f2263 user_id=51be10c2-8b5a-4dfd-92f8-a2d35f183974
+INFO:     127.0.0.1:51272 - "PATCH /api/v1/security/alerts/7fc6bcfe-343f-41f2-ad8d-6a06ea3f2263 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51273 - "POST /api/v1/security/alerts HTTP/1.1" 401 Unauthorized
+2026-10-23T09:38:02.458219Z [info     ] audit_event                    action=request_approval agent_id=None event_type=security.approval.requested outcome=success request_id=e918fd24-740d-4ab8-9a7e-c106ab90a6d8 resource=approval:42c98de0-3982-48b5-95e9-8101e143979e user_id=51be10c2-8b5a-4dfd-92f8-a2d35f183974
+INFO:     127.0.0.1:51274 - "POST /api/v1/security/approvals HTTP/1.1" 201 Created
+INFO:     127.0.0.1:51275 - "GET /api/v1/security/approvals HTTP/1.1" 200 OK
+2026-10-23T09:38:02.497359Z [info     ] audit_event                    action=decide_approval agent_id=None event_type=security.approval.decided outcome=approved request_id=71e5cd7c-8098-4b06-8088-c27dfa4a8fa5 resource=approval:42c98de0-3982-48b5-95e9-8101e143979e user_id=51be10c2-8b5a-4dfd-92f8-a2d35f183974
+INFO:     127.0.0.1:51276 - "POST /api/v1/security/approvals/42c98de0-3982-48b5-95e9-8101e143979e/decide HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51277 - "POST /api/v1/security/approvals/42c98de0-3982-48b5-95e9-8101e143979e/decide HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:51278 - "GET /api/v1/security/audit HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51279 - "GET /api/v1/tourism/places HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51280 - "GET /api/v1/tourism/places?q=beach HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51281 - "GET /api/v1/tourism/places?category=heritage HTTP/1.1" 200 OK
+2026-10-23T09:38:02.573285Z [info     ] manager_dispatch               priority=5 request_id=ee26694b-178e-466c-b35e-453f80ca326a task_id=487af51c-feda-48f5-aa8e-05490f33d870 task_type=auth_anomaly
+2026-10-23T09:38:02.573483Z [info     ] agent_completed                agent=authentication_guardian:5c243e21 request_id=ee26694b-178e-466c-b35e-453f80ca326a status=success task_id=487af51c-feda-48f5-aa8e-05490f33d870
+INFO:     127.0.0.1:51282 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+2026-10-23T09:38:02.589584Z [info     ] manager_dispatch               priority=5 request_id=21a8263c-f4fb-489a-bdd8-0f86c4ca2811 task_id=e92076ce-5d3b-4939-8c46-dfcfcf73a388 task_type=travel_query
+2026-10-23T09:38:02.589767Z [info     ] agent_completed                agent=travel_assistant:cc2dfd36 request_id=21a8263c-f4fb-489a-bdd8-0f86c4ca2811 status=success task_id=e92076ce-5d3b-4939-8c46-dfcfcf73a388
+INFO:     127.0.0.1:51283 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+2026-10-23T09:38:02.604416Z [info     ] manager_dispatch               priority=5 request_id=84d1b601-c2ab-49b3-bbb7-6da97dcaca8d task_id=67de1bab-f1b2-4598-b39e-dd2e48d5cfbb task_type=itinerary
+2026-10-23T09:38:02.604601Z [info     ] agent_completed                agent=itinerary_planner:58bfcccf request_id=84d1b601-c2ab-49b3-bbb7-6da97dcaca8d status=success task_id=67de1bab-f1b2-4598-b39e-dd2e48d5cfbb
+INFO:     127.0.0.1:51284 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+2026-10-23T09:38:02.621228Z [info     ] manager_dispatch               priority=5 request_id=e2db005b-ccf0-47f6-839d-9f4253522851 task_id=5cca672f-02b6-45c6-8c01-52b5b523b2fb task_type=heritage
+2026-10-23T09:38:02.621414Z [info     ] agent_completed                agent=heritage_guide:0d23d2b6 request_id=e2db005b-ccf0-47f6-839d-9f4253522851 status=success task_id=5cca672f-02b6-45c6-8c01-52b5b523b2fb
+INFO:     127.0.0.1:51285 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+2026-10-23T09:38:02.636397Z [info     ] manager_dispatch               priority=5 request_id=fe2914cc-13d4-41ab-be9b-a1a0aec6d2aa task_id=9654f65f-6da8-4587-bed6-6bb705d985b3 task_type=alert_triage
+2026-10-23T09:38:02.636789Z [info     ] agent_completed                agent=alert_triage:bceafb9c request_id=fe2914cc-13d4-41ab-be9b-a1a0aec6d2aa status=success task_id=9654f65f-6da8-4587-bed6-6bb705d985b3
+INFO:     127.0.0.1:51286 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+2026-10-23T09:38:02.651339Z [info     ] manager_dispatch               priority=5 request_id=10805a3b-3fc3-4544-9220-694ae4c0ce55 task_id=408665d4-699d-4ad9-86ef-51f1e3e5d0d2 task_type=containment
+2026-10-23T09:38:02.651514Z [info     ] agent_completed                agent=containment_advisor:c2846ff4 request_id=10805a3b-3fc3-4544-9220-694ae4c0ce55 status=success task_id=408665d4-699d-4ad9-86ef-51f1e3e5d0d2
+INFO:     127.0.0.1:51287 - "POST /api/v1/agents/tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51288 - "POST /api/v1/agents/policy/check HTTP/1.1" 200 OK
+2026-10-23T09:38:02.682405Z [warning  ] policy_violation               action=blocked agent_role=travel_assistant request_id=269fd34f-720f-497d-9ae8-a8b02e187fce requested_tool=write:alerts
+INFO:     127.0.0.1:51289 - "POST /api/v1/agents/policy/check HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51290 - "POST /api/v1/agents/policy/check HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51291 - "GET /api/v1/agents/roles HTTP/1.1" 200 OK
+2026-10-23T09:38:02.729234Z [info     ] keyword_search                 query=waterfall request_id=b2f1b3ee-417e-4139-bc25-e327c74f111a results=9
+INFO:     127.0.0.1:51292 - "GET /api/v1/tourism/places?q=waterfall&semantic=true HTTP/1.1" 200 OK
+2026-10-23T09:38:02.745305Z [info     ] keyword_search                 query='heritage church UNESCO' request_id=ce4eabf5-0dd0-4e8d-81e9-7556644be02d results=3
+INFO:     127.0.0.1:51293 - "GET /api/v1/tourism/places?q=heritage+church+UNESCO&semantic=true HTTP/1.1" 200 OK
+2026-10-23T09:38:02.763165Z [info     ] audit_event                    action=travel_assistant agent_id=None event_type=tourism.assistant.query outcome=success request_id=568913b9-4a9f-4cd8-a284-7d471ec19521 resource=None user_id=51be10c2-8b5a-4dfd-92f8-a2d35f183974
+2026-10-23T09:38:02.763360Z [info     ] manager_dispatch               priority=5 request_id=568913b9-4a9f-4cd8-a284-7d471ec19521 task_id=fe3d949b-5a36-4495-8d76-ee6374603af0 task_type=travel_query
+2026-10-23T09:38:02.763506Z [info     ] agent_completed                agent=travel_assistant:86bee9fa request_id=568913b9-4a9f-4cd8-a284-7d471ec19521 status=success task_id=fe3d949b-5a36-4495-8d76-ee6374603af0
+INFO:     127.0.0.1:51294 - "POST /api/v1/tourism/assistant HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51295 - "GET /api/v1/security/posture HTTP/1.1" 200 OK
