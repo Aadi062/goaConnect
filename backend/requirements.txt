@@ -2,57 +2,96 @@
 # GoaConnect Cybersecurity AI Force — Python Dependencies
 # Python 3.10+ required  |  Tested on Python 3.14.2
 # Install: pip install -r requirements.txt
+#
+# All versions below are the ACTUAL installed versions confirmed working on
+# Python 3.14.2 / Windows 10 (2026-10-23).
+# Versions are pinned with == for reproducibility.
 # ──────────────────────────────────────────────────────────────────────────────
 
 # ── Web Framework ─────────────────────────────────────────────────────────────
-fastapi==0.111.0
-uvicorn[standard]==0.30.1
-python-multipart==0.0.9
-slowapi==0.1.9
-limits==3.12.0
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+python-multipart==0.0.32
+starlette==1.6.0
+slowapi==0.1.10
+limits==5.8.0
 
 # ── Data Validation & Settings ────────────────────────────────────────────────
-pydantic==2.7.4
-pydantic-settings==2.3.4
+pydantic==2.13.5
+pydantic-settings==2.16.1
+email-validator==2.3.0
+annotated-types==0.8.0
 
 # ── Database (async SQLAlchemy + SQLite dev / PostgreSQL prod) ────────────────
-sqlalchemy[asyncio]==2.0.30
-aiosqlite==0.20.0          # SQLite async driver (dev)
-alembic==1.13.1            # Database migrations
+SQLAlchemy[asyncio]==2.0.52
+aiosqlite==0.22.1           # SQLite async driver (dev)
+greenlet==3.5.5             # Required by SQLAlchemy async
 
-# ── PostgreSQL (production) ───────────────────────────────────────────────────
-asyncpg==0.29.0
-psycopg2-binary==2.9.9
+# ── PostgreSQL (production — install separately) ──────────────────────────────
+# asyncpg==0.29.0           # uncomment for PostgreSQL async driver
+# psycopg2-binary==2.9.9    # uncomment for PostgreSQL sync driver (Alembic)
+# alembic==1.13.1           # uncomment for production migrations
 
 # ── Authentication & Security ─────────────────────────────────────────────────
-passlib[bcrypt]==1.7.4
-bcrypt==4.0.1              # Pin to 4.x — avoids Python 3.14 version-detect bug
-python-jose[cryptography]==3.3.0
+passlib==1.7.4
+bcrypt==5.0.0               # bcrypt 5.x works with Python 3.14; passlib uses sha256_crypt primary
+python-jose==3.5.0
+cryptography==50.0.1
+pyasn1==0.6.4
+rsa==4.9.1
+ecdsa==0.19.2
 
 # ── HTTP Client ───────────────────────────────────────────────────────────────
-httpx==0.27.0
+httpx==0.28.1
+httpcore==1.0.9
+requests==2.34.2
+certifi==2026.7.22
+charset-normalizer==3.5.1
+idna==3.19
+urllib3==2.7.0
 
 # ── Structured Logging ────────────────────────────────────────────────────────
-structlog==24.2.0
+structlog==26.1.0
+colorama==0.4.6              # Colored console output (Windows)
 
-# ── Metrics ───────────────────────────────────────────────────────────────────
-prometheus-fastapi-instrumentator==7.0.0
+# ── Caching — Redis + in-memory fallback ─────────────────────────────────────
+redis==8.1.0                 # redis.asyncio used; falls back to in-memory automatically
 
-# ── Caching (optional Redis) ──────────────────────────────────────────────────
-redis==5.0.4
+# ── AI / Local Inference (Ollama) ─────────────────────────────────────────────
+ollama==0.6.3                # Ollama Python client; graceful fallback when server not running
 
-# ── Vector Search (pgvector, production) ─────────────────────────────────────
-pgvector==0.3.1
-numpy==1.26.4
+# ── Vector Search (pgvector) ─────────────────────────────────────────────────
+pgvector==0.5.1              # Python cosine search active in dev; full vector DB needs PostgreSQL
+numpy==2.5.3                 # Required for vector math
 
 # ── Testing ───────────────────────────────────────────────────────────────────
 pytest==9.1.1
-pytest-asyncio==1.0.0
-pytest-cov==5.0.0
+pytest-asyncio==1.4.0
+pytest-cov==7.1.0
+coverage==7.16.2
 anyio==4.15.1
-faker==25.2.0
 
-# ── Security Scanning (optional, Linux/Mac only) ─────────────────────────────
-bandit==1.7.9
-# semgrep==1.74.0; sys_platform != "win32"   # uncomment on Linux/Mac
-# safety==3.2.3                               # uncomment for dependency CVE scan
+# ── Utilities ─────────────────────────────────────────────────────────────────
+python-dotenv==1.2.4
+click==8.5.0
+h11==0.16.0
+dnspython==2.9.0
+
+# ── Security Scanning (optional — Linux / Mac preferred) ─────────────────────
+# bandit==1.7.9              # uncomment for SAST scanning
+# semgrep                    # Linux/Mac only — uncomment on CI
+# safety                     # uncomment for dependency CVE scan
+
+# ── Notes ─────────────────────────────────────────────────────────────────────
+# faker, alembic, asyncpg, psycopg2-binary, bandit, prometheus-fastapi-instrumentator
+# are NOT installed on this dev workstation (disk space / binary wheel constraints).
+# Add them for production / CI environments.
+#
+# Node.js / npm are NOT required — the frontend is a zero-dependency single HTML SPA
+# served directly by FastAPI from app/static/index.html.
+#
+# Ollama Desktop must be running separately for LLM inference:
+#   https://ollama.com/download
+#   ollama pull qwen2.5:3b
+#   ollama serve
+# The application starts and runs fully without Ollama (graceful fallback active).
