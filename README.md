@@ -3,8 +3,8 @@
 > **Next-Generation Autonomous Multi-Agent Cybersecurity Platform + Goa Tourism AI**
 > Built with Python · FastAPI · SQLite/PostgreSQL · Zero-dependency frontend SPA
 
-[![Tests](https://img.shields.io/badge/tests-38%20passed-brightgreen)](#testing)
-[![Live Tests](https://img.shields.io/badge/live%20tests-35%20passed-brightgreen)](#testing)
+[![Tests](https://img.shields.io/badge/tests-52%20passed-brightgreen)](#testing)
+[![Live Tests](https://img.shields.io/badge/live%20tests-40%20passed-brightgreen)](#testing)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](#installation)
 [![License](https://img.shields.io/badge/license-MIT-blue)](#license)
 
@@ -277,8 +277,11 @@ Base URL: `http://localhost:8000`
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
 | GET | `/api/v1/tourism/places` | None | List/search Goa places |
+| GET | `/api/v1/tourism/places?semantic=true&q=...` | None | AI/keyword ranked search |
 | GET | `/api/v1/tourism/places/{id}` | None | Get place details |
+| POST | `/api/v1/tourism/assistant` | Bearer | AI travel assistant (agent-routed) |
 | POST | `/api/v1/tourism/itineraries` | Bearer | Create itinerary |
+| GET | `/api/v1/tourism/itineraries` | Bearer | List my itineraries |
 
 ### Agents
 | Method | Endpoint | Auth | Description |
@@ -361,13 +364,13 @@ containment_advisor  → read: security_alert, audit_event
 ```bash
 cd backend
 python -m pytest tests/ -v
-# Expected: 38 passed
+# Expected: 52 passed (38 core + 14 cache/search)
 ```
 
 ### Run live HTTP tests (server must be running)
 ```bash
 python serve.py       # start server first
-python live_test.py   # 35 live endpoint tests
+python live_test.py   # 40 live endpoint tests
 ```
 
 ### Test coverage areas
@@ -379,6 +382,10 @@ python live_test.py   # 35 live endpoint tests
 - SQL injection protection
 - Agent task routing and policy enforcement
 - Tourism place search and itinerary generation
+- Cache service (set/get/delete/TTL expiry, in-memory fallback)
+- Semantic search (keyword ranking, top-k, empty input, no-match)
+- Health endpoint component reporting (Ollama, Redis, search)
+- Travel assistant HTTP routing (agent-routed, graceful fallback)
 
 ---
 
@@ -449,30 +456,36 @@ gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 | Human approval workflow | ✅ Verified | Approve/reject/expire |
 | Audit log (append-only) | ✅ Verified | All events recorded |
 | Security posture dashboard | ✅ Verified | Live stats |
-| Rate limiting | ✅ Implemented | Memory backend |
+| Rate limiting | ✅ Implemented | slowapi, memory backend |
 | Manager Agent routing | ✅ Verified | Deterministic |
 | Auth Guardian | ✅ Verified | Brute-force detection |
 | Alert Triage Agent | ✅ Verified | Deduplication |
 | Risk Prioritization | ✅ Verified | Score ranking |
 | Containment Advisor | ✅ Verified | Approval required |
 | Policy Enforcement | ✅ Verified | Code-enforced |
-| Travel Assistant | ✅ Verified | Recommendations |
-| Itinerary Planner | ✅ Verified | Day-by-day |
-| Heritage Guide | ✅ Verified | Citations |
+| Travel Assistant | ✅ Verified | LLM + rules fallback, agent-routed HTTP |
+| Itinerary Planner | ✅ Verified | LLM tip injection, day-by-day |
+| Heritage Guide | ✅ Verified | LLM ai_insight, citations |
 | Tourism places (9 seeded) | ✅ Verified | Search + filter |
+| Semantic search | ✅ Verified | Vector (Ollama) or keyword fallback |
+| Cache service | ✅ Verified | Redis or in-memory fallback |
+| Ollama AI adapter | ✅ Verified | Auto-detect, graceful fallback |
+| Health component reporting | ✅ Verified | Ollama + Redis + search status |
 | Single-file SPA frontend | ✅ Verified | Zero dependencies |
 | Swagger API docs | ✅ Verified | /docs |
 | SQLite dev database | ✅ Verified | Auto-init |
-| PostgreSQL (production) | 🔶 Partial | Schema ready |
-| Redis caching | 🔶 Partial | Falls back to memory |
-| PostGIS geospatial | 🔶 Partial | Schema ready |
-| pgvector semantic search | 🔷 Not started | Dependency installed |
-| Ollama local inference | 🔷 Not started | Adapter pattern ready |
-| React/Vite frontend | 🔷 Blocked | Requires Node.js |
-| WebXR/AR features | 🔷 Not started | Optional milestone |
+| PostgreSQL (production) | 🔶 Partial | Schema + migration ready |
+| Redis caching | 🔶 Partial | Fallback verified; needs Redis server |
+| PostGIS geospatial | 🔶 Partial | Schema ready, needs PostgreSQL |
+| pgvector semantic search | 🔶 Partial | Python cosine fallback active; needs PostgreSQL + pgvector |
+| Ollama local inference | 🔶 Partial | Adapter wired; needs Ollama desktop running |
+| React/Vite frontend | 🔷 Blocked | Requires Node.js (not installed) |
+| WebXR/AR features | 🔷 Not started | Optional milestone 6 |
 | n8n workflow integration | 🔷 Not started | Optional |
 
-Legend: ✅ Verified · 🔶 Partial/Unverified · 🔷 Not started
+Legend: ✅ Verified · 🔶 Partial (needs external service) · 🔷 Not started/Blocked
+
+**Test counts:** 52 pytest unit/integration tests + 40 live HTTP tests = **92 total, all passing**
 
 ---
 
