@@ -1,0 +1,64 @@
+﻿# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+wheels/
+*.whl
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.env/
+
+# ── Environment files (contain secrets) ──────────────────────────────────────
+.env
+*.env
+!backend/dev.env
+!.env.template
+
+# ── Database (dev runtime — generated, not committed) ─────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Server runtime files ──────────────────────────────────────────────────────
+backend/server.pid
+backend/server.log
+backend/quick_check.py
+
+# ── Test / coverage artefacts ─────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+
+# ── Node / frontend build ─────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# ── IDE / OS ──────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Distribution artefacts (generated locally, not committed) ─────────────────
+*.zip
+*.tar.gz
+
+# ── Temporary generated reports (outside static/) ────────────────────────────
+goaconnect-*.html
